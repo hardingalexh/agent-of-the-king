@@ -19,9 +19,9 @@ def get_cards():
 
 # creates embedded link with card image
 def embed_card(card, image=True):
-    image_url = "https://www.arkhamdb.com" + card.get('imagesrc', None)
     e = discord.Embed()
-    if image:
+    if image and card.get('imagesrc', None):
+        image_url = "https://www.arkhamdb.com" + card.get('imagesrc')
         e.set_image(url=image_url)
     e.url = card.get('url', None)
     e.title = card.get('name', None)
