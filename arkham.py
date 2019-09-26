@@ -12,16 +12,23 @@ token = os.getenv('DISCORD_TOKEN')
 
 cards = []
 
+# gets all cards including encounters
 def get_cards():
     global cards
     cards = requests.get('https://www.arkhamdb.com/api/public/cards?encounter=1').json()
 
-def embed_card(card):
+# creates embedded link with card image
+def embed_card(card, image=True):
     image_url = "https://www.arkhamdb.com" + card.get('imagesrc', None)
     e = discord.Embed()
-    e.set_image(url=image_url)
+    if image:
+        e.set_image(url=image_url)
     e.url = card.get('url', None)
     e.title = card.get('name', None)
+    if card.get('xp', 0):
+        e.title += " (" + str(card.get('xp', '-')) + ")"
+    if card.get('subname', None):
+        e.description = card.get('subname')
     return e
 
 # Commenting out arkhamdb bot skeleton - waiting on arkhamdb to resolve TLS issues
@@ -45,9 +52,13 @@ async def search_card(ctx, name="Ancient Evils", level=None):
     def query(card):
         return (name.lower() in card.get('name', '').lower()) and (str(card.get('xp', '')) == level or level is None)
     matches = list(filter(query, cards))
-    if len(matches):
+    if len(matches) and len(matches) <= 3:
         for match in matches:
             e = embed_card(match)
+            await ctx.send(embed=e)
+    elif len(matches) > 3:
+        for match in matches:
+            e = embed_card(match, False)
             await ctx.send(embed=e)
     else:
         await ctx.send('No matches')
