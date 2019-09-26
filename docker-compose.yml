@@ -1,0 +1,10 @@
+version: '3.5'
+services:
+  arkham:
+    container_name: arkham_py
+    build: .
+    volumes:
+      - ./:/code
+    stdin_open: true
+    tty: true
+    command: ["python3", "/code/arkham.py"]
