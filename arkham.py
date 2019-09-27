@@ -67,6 +67,8 @@ async def search_card(ctx, name="Ancient Evils", level=None):
 async def on_message(message):
     if 'hastur' in message.content.lower():
         await message.channel.send(message.author.name + ' takes 1 horror')
+    if ':skull:' in message.content.lower():
+        await message.channel.send(u"\U0001F3BA" + u"doot doot" + u"\U0001F3BA")
     await bot.process_commands(message)
     
 get_cards()
