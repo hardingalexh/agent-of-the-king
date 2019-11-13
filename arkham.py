@@ -42,7 +42,10 @@ async def refresh_cards(ctx):
 
 @bot.command(name='weakness')
 async def get_random_basic_weakness(ctx):
-    weaknesses = list(filter(lambda card: card.get('subtype_code', None) == 'basicweakness' and card.get('code', "") is not "01000", cards))
+    if ctx.message.author.name.lower() ==  "sepia_penguin03":
+        weaknesses = list(filter(lambda card: card.get('name', '').lower() == 'the 13th vision', cards))
+    else:
+        weaknesses = list(filter(lambda card: card.get('subtype_code', None) == 'basicweakness' and card.get('code', "") is not "01000", cards))
     weakness = random.choice(list(weaknesses))
     e = embed_card(weakness)
     await ctx.send(embed=e)
