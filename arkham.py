@@ -13,11 +13,16 @@ token = os.getenv('DISCORD_TOKEN')
 cards = []
 
 # gets all cards including encounters
+
+
 def get_cards():
     global cards
-    cards = requests.get('https://www.arkhamdb.com/api/public/cards?encounter=1').json()
+    cards = requests.get(
+        'https://www.arkhamdb.com/api/public/cards?encounter=1').json()
 
 # creates embedded link with card image
+
+
 def embed_card(card, image=True):
     e = discord.Embed()
     if image and card.get('imagesrc', None):
@@ -31,24 +36,40 @@ def embed_card(card, image=True):
         e.description = card.get('subname')
     return e
 
+
 # Commenting out arkhamdb bot skeleton - waiting on arkhamdb to resolve TLS issues
 client = discord.Client()
 bot = commands.Bot(command_prefix='!')
 
+
 @bot.command(name='refresh')
 async def refresh_cards(ctx):
     get_cards()
+
     await ctx.send('Card pool refreshed')
 
+
 @bot.command(name='weakness')
-async def get_random_basic_weakness(ctx):
-    if ctx.message.author.name.lower() ==  "sepia_penguin03":
-        weaknesses = list(filter(lambda card: card.get('name', '').lower() == 'the 13th vision', cards))
-    else:
-        weaknesses = list(filter(lambda card: card.get('subtype_code', None) == 'basicweakness' and card.get('code', "") is not "01000", cards))
+async def get_random_basic_weakness(ctx, *args):
+    weaknesses = list(filter(lambda card: card.get('subtype_code', None) ==
+                             'basicweakness' and card.get('name', "") is not "Random Basic Weakness", cards))
+
+    print(weaknesses)
+    if len(list(args)):
+        def matchTraits(card):
+            matches = 0
+            for trait in list(args):
+                if trait.lower() in card.get('traits', '').lower():
+                    matches += 1
+            if matches > 0:
+                return True
+            return False
+
+        weaknesses = filter(matchTraits, weaknesses)
     weakness = random.choice(list(weaknesses))
     e = embed_card(weakness)
     await ctx.send(embed=e)
+
 
 @bot.command(name='card')
 async def search_card(ctx, name="Ancient Evils", level=None):
@@ -66,6 +87,7 @@ async def search_card(ctx, name="Ancient Evils", level=None):
     else:
         await ctx.send('No matches')
 
+
 @bot.event
 async def on_message(message):
     if 'hastur' in message.content.lower():
@@ -73,6 +95,6 @@ async def on_message(message):
     if ':skull:' in message.content.lower():
         await message.channel.send(u"\U0001F3BA" + u"doot doot" + u"\U0001F3BA")
     await bot.process_commands(message)
-    
+
 get_cards()
 bot.run(token)
