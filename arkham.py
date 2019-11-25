@@ -80,10 +80,12 @@ async def search_card(ctx, name="Ancient Evils", level=None):
         for match in matches:
             e = embed_card(match)
             await ctx.send(embed=e)
-    elif len(matches) > 3:
+    elif len(matches) > 3 and len(matches) <= 10:
         for match in matches:
             e = embed_card(match, False)
             await ctx.send(embed=e)
+    elif len(matches) > 10:
+        await ctx.send('More than 10 matches, please refine your search')
     else:
         await ctx.send('No matches')
 
