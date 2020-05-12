@@ -53,8 +53,6 @@ async def refresh_cards(ctx):
 async def get_random_basic_weakness(ctx, *args):
     weaknesses = list(filter(lambda card: card.get('subtype_code', None) ==
                              'basicweakness' and card.get('name', "") is not "Random Basic Weakness", cards))
-
-    print(weaknesses)
     if len(list(args)):
         def matchTraits(card):
             matches = 0
@@ -96,6 +94,8 @@ async def on_message(message):
         await message.channel.send(message.author.name + ' takes 1 horror')
     if ':skull:' in message.content.lower():
         await message.channel.send(u"\U0001F3BA" + u"doot doot" + u"\U0001F3BA")
+    if 'x' == message.content.lower():
+        await message.channel.send('JASON')
     await bot.process_commands(message)
 
 get_cards()
