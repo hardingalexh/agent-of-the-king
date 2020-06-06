@@ -28,3 +28,8 @@ Searches for a card. Note that cards with multiple words require spaces. For exa
 ```
 Searches for a random basic weakness. Define any number of parameters. These are not additive - searching `!weakness madness pact` will not only allow weaknesses that are both madness AND pact, it will allow weaknesses that are madness AND/OR pact.
 
+
+```
+!upgrade [card]
+```
+Searches for all matches for the card name that are not level 0, and returns a random version of it. For upgrading journey cards like archaic glyphs/strange solution.
