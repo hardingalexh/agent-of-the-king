@@ -45,9 +45,17 @@ bot = commands.Bot(command_prefix='!')
 @bot.command(name='refresh')
 async def refresh_cards(ctx):
     get_cards()
-
     await ctx.send('Card pool refreshed')
 
+
+@bot.command(name='upgrade')
+async def get_random_upgraded_card(ctx, target):
+    targets = list(filter(lambda card: card.get('name', "").lower() == target.lower() and card.get('xp', 0) is not 0, cards))
+    if len(targets):
+        e = embed_card(random.choice(list(targets)))
+        await ctx.send(embed=e)
+    else:
+        await ctx.send("No matches for " + target)
 
 @bot.command(name='weakness')
 async def get_random_basic_weakness(ctx, *args):
