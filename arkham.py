@@ -100,11 +100,10 @@ async def embed_deck(content):
     content = content.lower()
     deckId = None
     if "arkhamdb.com/deck/view/" in content:
-        deckId = re.search('(?<=arkhamdb.com/deck/view/)(.*)(?=(\s))', content)
-        if not deckId:
-            deckId = re.search('(?<=arkhamdb.com/deck/view/)(.*)(?=(\s))', content + ' ') # dirty hack because i'm bad at regex
+        deckId = re.search('(?<=arkhamdb.com/deck/view/(.{6})', content)
     if "https://arkhamdb.com/decklist/" in content:
-        deckId = re.search('(?<=arkhamdb.com/decklist/view/)(.*)(?=(/))', content)
+        deckId = re.search('(?<=arkhamdb.com/decklist/view/)(.{6})', content)
+    
     await message.channel.send(deckId)
 
 @bot.event
