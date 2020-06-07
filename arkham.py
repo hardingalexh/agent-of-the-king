@@ -99,12 +99,26 @@ async def search_card(ctx, name="Ancient Evils", level=None):
 async def embed_deck(message):
     content = message.content.lower()
     deckId = None
+    deckType = None
     if "arkhamdb.com/deck/view/" in content:
         deckId = re.search('(?<=arkhamdb.com/deck/view/)(.{6})', content)
+        deckType = 'deck'
     if "https://arkhamdb.com/decklist/" in content:
         deckId = re.search('(?<=arkhamdb.com/decklist/view/)(.{5})', content)
+        deckType = 'decklist'
     
-    await message.channel.send(deckId)
+    if deckId:
+        deckId = deckId.group()
+        if deckType = 'deck':
+            apiString = 'https://arkhamdb.com/api/public/deck/' + deckId
+        if deckType = 'decklist':
+            apiString = 'https://arkhamdb.com/api/public/decklist/' + deckId
+        deckJson = requests.get(apiString).json()
+        gator = list(cards.filter(lambda card: card.get('id', 0) == deckJson.get('investigator_code', None)))[0]
+        e = embed_card(gator)
+        message.channel.send(embed=e)
+    else:
+        await message.channel.send('Deck URL detected, unable to extract deck ID')
 
 @bot.event
 async def on_message(message):
