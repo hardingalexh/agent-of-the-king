@@ -132,7 +132,10 @@ async def embed_deck(message):
         categories = ['Asset', 'Permanent', 'Event', 'Skill', 'Treachery']
         deckCards = list(filter(lambda card: card.get('code', '') in deckJson.get('slots', {}).keys(), cards))
         for category in categories:
-            categoryCards = list(filter(lambda card: card.get('type_code', '') == category.lower(), deckCards))
+            if(category == 'permanent'):
+                categoryCards = list(filter(lambda card: card.get('permanent', False) == True, deckCards))
+            else:
+                categoryCards = list(filter(lambda card: card.get('type_code', '') == category.lower() and card.get('permanent', False) == False, deckCards))
             e.description += '\n ' + category + 's:'
             for card in categoryCards:
                 cardString = str(deckJson.get('slots')[card.get('code')]) + 'x '
