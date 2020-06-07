@@ -106,17 +106,20 @@ async def embed_deck(message):
     if "https://arkhamdb.com/decklist/" in content:
         deckId = re.search('(?<=arkhamdb.com/decklist/view/)(.{5})', content)
         deckType = 'decklist'
-    
+
     if deckId:
         deckId = deckId.group()
-        if deckType = 'deck':
+        if deckType == 'deck':
             apiString = 'https://arkhamdb.com/api/public/deck/' + deckId
-        if deckType = 'decklist':
+        if deckType == 'decklist':
             apiString = 'https://arkhamdb.com/api/public/decklist/' + deckId
         deckJson = requests.get(apiString).json()
-        gator = list(cards.filter(lambda card: card.get('id', 0) == deckJson.get('investigator_code', None)))[0]
+        gator = list(filter(lambda card: card.get('code', 0) == deckJson.get('investigator_code', None), cards))[0]
         e = embed_card(gator)
-        message.channel.send(embed=e)
+        e.title = deckJson.get('name', "") + " " + deckJson.get('version', "")
+        e.description = "XP: " + str(deckJson.get('xp', ''))
+        e.description += "\n Cards:" 
+        await message.channel.send(embed=e)
     else:
         await message.channel.send('Deck URL detected, unable to extract deck ID')
 
