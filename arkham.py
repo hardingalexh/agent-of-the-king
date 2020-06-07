@@ -1,5 +1,6 @@
 import os
 import random
+import re
 import requests
 import discord
 
@@ -95,6 +96,16 @@ async def search_card(ctx, name="Ancient Evils", level=None):
     else:
         await ctx.send('No matches')
 
+async def embed_deck(content):
+    content = content.lower()
+    deckId = None
+    if "arkhamdb.com/deck/view/" in content:
+        deckId = re.search('(?<=arkhamdb.com/deck/view/)(.*)(?=(\s))', content)
+        if not deckId:
+            deckId = re.search('(?<=arkhamdb.com/deck/view/)(.*)(?=(\s))', content + ' ') # dirty hack because i'm bad at regex
+    if "https://arkhamdb.com/decklist/" in content:
+        deckId = re.search('(?<=arkhamdb.com/decklist/view/)(.*)(?=(/))', content)
+    await message.channel.send(deckId)
 
 @bot.event
 async def on_message(message):
@@ -104,6 +115,9 @@ async def on_message(message):
         await message.channel.send(u"\U0001F3BA" + u"doot doot" + u"\U0001F3BA")
     if 'x' == message.content.lower():
         await message.channel.send('JASON')
+    if "arkhamdb.com/deck/view/" in message.content.lower() or 'arkhamdb.com/decklist/view/' in message.content.lower():
+        await embed_deck(message.content)
+    
     await bot.process_commands(message)
 
 get_cards()
