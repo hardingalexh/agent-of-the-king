@@ -96,13 +96,13 @@ async def search_card(ctx, name="Ancient Evils", level=None):
     else:
         await ctx.send('No matches')
 
-async def embed_deck(content):
-    content = content.lower()
+async def embed_deck(message):
+    content = message.content.lower()
     deckId = None
     if "arkhamdb.com/deck/view/" in content:
-        deckId = re.search('(?<=arkhamdb.com/deck/view/(.{6})', content)
+        deckId = re.search('(?<=arkhamdb.com/deck/view/)(.{6})', content)
     if "https://arkhamdb.com/decklist/" in content:
-        deckId = re.search('(?<=arkhamdb.com/decklist/view/)(.{6})', content)
+        deckId = re.search('(?<=arkhamdb.com/decklist/view/)(.{5})', content)
     
     await message.channel.send(deckId)
 
@@ -115,7 +115,7 @@ async def on_message(message):
     if 'x' == message.content.lower():
         await message.channel.send('JASON')
     if "arkhamdb.com/deck/view/" in message.content.lower() or 'arkhamdb.com/decklist/view/' in message.content.lower():
-        await embed_deck(message.content)
+        await embed_deck(message)
     
     await bot.process_commands(message)
 
