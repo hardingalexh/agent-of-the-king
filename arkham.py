@@ -20,7 +20,6 @@ def get_cards():
     global cards
     cards = requests.get(
         'https://www.arkhamdb.com/api/public/cards?encounter=1').json()
-
 # creates embedded link with card image
 
 
@@ -118,25 +117,25 @@ async def embed_deck(message):
         deckJson = requests.get(apiString).json()
         # create initial embed using investigator card image
         gator = list(filter(lambda card: card.get('code', 0) == deckJson.get('investigator_code', None), cards))[0]
-        e = embed_card(gator)
+        e = discord.Embed()
+        e.description = ''
         # set title to deck name with appropriate url
         e.title = deckJson.get('name', "") + " " + deckJson.get('version', "")
         if deckType == 'deck':
             e.url = 'https://arkhamdb.com/deck/view/' + deckId
         if (deckType == 'decklist'):
             e.url = 'https://arkhamdb.com/decklist/view/'+ deckId
-        # start description with XP
-        e.description = "XP: " + str(deckJson.get('xp', ''))
-        e.description += "\n Cards: \n"
-        # get cards and sort them into assets/events/skills/treacheries
         categories = ['Asset', 'Permanent', 'Event', 'Skill', 'Treachery']
         deckCards = list(filter(lambda card: card.get('code', '') in deckJson.get('slots', {}).keys(), cards))
         for category in categories:
-            if(category == 'permanent'):
+            if(category == 'Permanent'):
                 categoryCards = list(filter(lambda card: card.get('permanent', False) == True, deckCards))
             else:
                 categoryCards = list(filter(lambda card: card.get('type_code', '') == category.lower() and card.get('permanent', False) == False, deckCards))
-            e.description += '\n ' + category + 's:'
+            if(category == 'Treachery'):
+                e.description += '\n' + 'Treacheries:'
+            else:
+                e.description += '\n ' + category + 's:'
             for card in categoryCards:
                 cardString = str(deckJson.get('slots')[card.get('code')]) + 'x '
                 cardString += card.get('name', '')
