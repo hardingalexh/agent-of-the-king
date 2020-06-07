@@ -98,6 +98,7 @@ async def search_card(ctx, name="Ancient Evils", level=None):
 
 async def embed_deck(message):
     content = message.content.lower()
+    # parse message to get deck id and type (decklist or deck)
     deckId = None
     deckType = None
     if "arkhamdb.com/deck/view/" in content:
@@ -108,17 +109,37 @@ async def embed_deck(message):
         deckType = 'decklist'
 
     if deckId:
+        # get deck from arkhamdb api
         deckId = deckId.group()
         if deckType == 'deck':
             apiString = 'https://arkhamdb.com/api/public/deck/' + deckId
         if deckType == 'decklist':
             apiString = 'https://arkhamdb.com/api/public/decklist/' + deckId
         deckJson = requests.get(apiString).json()
+        # create initial embed using investigator card image
         gator = list(filter(lambda card: card.get('code', 0) == deckJson.get('investigator_code', None), cards))[0]
         e = embed_card(gator)
+        # set title to deck name with appropriate url
         e.title = deckJson.get('name', "") + " " + deckJson.get('version', "")
+        if deckType == 'deck':
+            e.url = 'https://arkhamdb.com/deck/view/' + deckId
+        if (deckType == 'decklist'):
+            e.url = 'https://arkhamdb.com/decklist/view/'+ deckId
+        # start description with XP
         e.description = "XP: " + str(deckJson.get('xp', ''))
-        e.description += "\n Cards:" 
+        e.description += "\n Cards:"
+        # get cards and sort them into assets/events/skills/treacheries
+        categories = ['Asset', 'Permanent', 'Event', 'Skill', 'Treachery']
+        deckCards = list(filter(lambda card: card.get('code', '') in deckJson.get('slots', {}).keys(), cards))
+        for category in categories:
+            categoryCards = list(filter(lambda card: card.get('type_code', '' == category.lower()), deckCards))
+            e.description += '\n ' + category + 's:'
+            for card in categoryCards:
+                cardString = str(deckJson.get('slots')[card.get('code')]) + 'x '
+                cardString += card.get('name', '')
+                if card.get('xp', 0) > 0:
+                    cardString += ' (' + str(card.get('xp', 0)) + ')'
+                e.description += '\n' + cardString
         await message.channel.send(embed=e)
     else:
         await message.channel.send('Deck URL detected, unable to extract deck ID')
