@@ -127,12 +127,12 @@ async def embed_deck(message):
             e.url = 'https://arkhamdb.com/decklist/view/'+ deckId
         # start description with XP
         e.description = "XP: " + str(deckJson.get('xp', ''))
-        e.description += "\n Cards:"
+        e.description += "\n Cards: \n"
         # get cards and sort them into assets/events/skills/treacheries
         categories = ['Asset', 'Permanent', 'Event', 'Skill', 'Treachery']
         deckCards = list(filter(lambda card: card.get('code', '') in deckJson.get('slots', {}).keys(), cards))
         for category in categories:
-            categoryCards = list(filter(lambda card: card.get('type_code', '' == category.lower()), deckCards))
+            categoryCards = list(filter(lambda card: card.get('type_code', '') == category.lower(), deckCards))
             e.description += '\n ' + category + 's:'
             for card in categoryCards:
                 cardString = str(deckJson.get('slots')[card.get('code')]) + 'x '
@@ -140,6 +140,7 @@ async def embed_deck(message):
                 if card.get('xp', 0) > 0:
                     cardString += ' (' + str(card.get('xp', 0)) + ')'
                 e.description += '\n' + cardString
+            e.description += '\n'
         await message.channel.send(embed=e)
     else:
         await message.channel.send('Deck URL detected, unable to extract deck ID')
