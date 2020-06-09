@@ -33,3 +33,9 @@ Searches for a random basic weakness. Define any number of parameters. These are
 !upgrade [card]
 ```
 Searches for all matches for the card name that are not level 0, and returns a random version of it. For upgrading journey cards like archaic glyphs/strange solution.
+
+```
+!investigator [faction]
+
+Chooses a random investigator, optionally for a given faction.
+```

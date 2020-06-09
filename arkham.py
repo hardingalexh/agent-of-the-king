@@ -47,7 +47,6 @@ async def refresh_cards(ctx):
     get_cards()
     await ctx.send('Card pool refreshed')
 
-
 @bot.command(name='upgrade')
 async def get_random_upgraded_card(ctx, target):
     targets = list(filter(lambda card: card.get('name', "").lower() == target.lower() and card.get('xp', 0) is not 0, cards))
@@ -76,7 +75,6 @@ async def get_random_basic_weakness(ctx, *args):
     e = embed_card(weakness)
     await ctx.send(embed=e)
 
-
 @bot.command(name='card')
 async def search_card(ctx, name="Ancient Evils", level=None):
     def query(card):
@@ -94,6 +92,19 @@ async def search_card(ctx, name="Ancient Evils", level=None):
         await ctx.send('More than 10 matches, please refine your search')
     else:
         await ctx.send('No matches')
+
+@bot.command(name='investigator')
+async def random_investigator(ctx, faction=None):
+    investigators = list(filter(lambda card: card.get('type_code', '') == 'investigator', cards))
+    if faction:
+        investigators = list(filter(lambda card: card.get('faction_code', '') == faction.lower(), investigators))
+    if len(investigators) > 0:
+        choice = random.choice(list(investigators))
+        e = embed_card(choice)
+        await ctx.send(embed=e)
+    else:
+        await ctx.send('No matches found - invalid faction')
+        
 
 async def embed_deck(message):
     content = message.content.lower()
