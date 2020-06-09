@@ -76,10 +76,13 @@ async def get_random_basic_weakness(ctx, *args):
     await ctx.send(embed=e)
 
 @bot.command(name='card')
-async def search_card(ctx, name="Ancient Evils", level=None):
-    def query(card):
-        return (name.lower() in card.get('name', '').lower()) and (str(card.get('xp', '')) == level or level is None)
-    matches = list(filter(query, cards))
+async def search_card(ctx, *args):
+    if(len(list(args)) == 0):
+        name = 'ancient evils'
+    else:
+        name = ' '
+        name.join(list(args))
+    matches = list(filter(lambda card: name.lower() in card.get('name', '').lower(), cards))
     if len(matches) and len(matches) <= 3:
         for match in matches:
             e = embed_card(match)
