@@ -81,7 +81,7 @@ async def search_card(ctx, *args):
 
 @bot.command(name='investigator')
 async def random_investigator(ctx, faction=None):
-    investigators = list(filter(lambda card: card.get('type_code', '') == 'investigator', cards))
+    investigators = list(filter(lambda card: card.get('type_code', '') == 'investigator' and card.get('permanent', True) and card.get('hidden', True), cards))
     if faction:
         investigators = list(filter(lambda card: card.get('faction_code', '') == faction.lower(), investigators))
     if len(investigators) > 0:
