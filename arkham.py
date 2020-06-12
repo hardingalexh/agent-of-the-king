@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
 client = discord.Client()
-
+bot = commands.Bot(command_prefix='!')
 # gets all cards including encounters
 cards = []
 

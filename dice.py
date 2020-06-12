@@ -2,9 +2,6 @@ import discord
 import random
 from discord.ext import commands
 
-bot = commands.Bot(command_prefix='!')
-
-
 @bot.command(name='cointoss')
 async def cointoss(ctx):
     await ctx.send(random.choice(['Heads', 'Tails']))
