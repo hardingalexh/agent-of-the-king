@@ -50,5 +50,11 @@ Chooses a random investigator, optionally for a given faction.
 Returns heads or tails
 
 ```
-!roll [dice]
+!roll [dice: format XdY where X is quantity of dice, Y is sides on die]
 ```
+Rolls dice and returns results.
+
+```
+pickone
+```
+Picks one from the space separated list of arguments
