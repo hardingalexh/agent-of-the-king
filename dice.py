@@ -35,3 +35,7 @@ async def roll_dice(ctx, dice):
             e.description += '\n' + str(roll)
 
         await ctx.send(embed=e)
+
+@bot.command(name="pickone")
+async def pickone(ctx, *args):
+    await ctx.send(random.choice(args))
