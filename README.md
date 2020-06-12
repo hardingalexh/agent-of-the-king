@@ -1,6 +1,6 @@
 # Agent of the King
 
-### Setup
+## Setup
 Requirements: docker, docker-compose, a [discord bot](https://discordapp.com/developers/docs/intro)
 
 1. `cp .env.example .env`
@@ -11,8 +11,10 @@ For local development, run `docker attach arkham_py` to attach to the container 
 Run `docker-compose restart arkham_py` to restart bot to apply changes
 
 
-### Commands
+## Commands
 
+
+### Arkham-related
 ```
 !refresh
 ```
@@ -38,4 +40,15 @@ Searches for all matches for the card name that are not level 0, and returns a r
 !investigator [faction]
 
 Chooses a random investigator, optionally for a given faction.
+```
+
+### Randomization
+
+```
+!cointoss
+```
+Returns heads or tails
+
+```
+!roll [dice]
 ```
