@@ -1,6 +1,7 @@
 import os
 import discord
 from arkhamdb import *
+from dice import *
 from discord.ext import commands
 
 from dotenv import load_dotenv
