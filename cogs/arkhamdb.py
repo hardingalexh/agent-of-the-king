@@ -85,13 +85,13 @@ class Arkhamdb(commands.Cog):
         await ctx.send('Card pool refreshed')
 
     @commands.command()
-    async def upgrade(self, ctx, target):
-        targets = list(filter(lambda card: card.get('name', "").lower() == target.lower() and card.get('xp', 0) is not 0, self.cards))
+    async def upgrade(self, ctx, *, arg):
+        targets = list(filter(lambda card: card.get('name', "").lower() == arg.lower() and card.get('xp', 0) is not 0, self.cards))
         if len(targets):
             e = self._embed_card(random.choice(list(targets)))
             await ctx.send(embed=e)
         else:
-            await ctx.send("No matches for " + target)
+            await ctx.send("No matches for " + arg)
 
     @commands.command()
     async def weakness(self, ctx, *args):
@@ -114,12 +114,9 @@ class Arkhamdb(commands.Cog):
 
     @commands.command()
     async def card(self, ctx, *, arg):
-        # if(len(list(args)) == 0):
-        #     name = 'ancient evils'
-        # else:
-        #     name = ' '.join(list(args))
-        name = arg
-        matches = list(filter(lambda card: name.lower() in card.get('name', '').lower(), self.cards))
+        if not arg:
+            arg = 'ancient evils'
+        matches = list(filter(lambda card: arg.lower() in card.get('name', '').lower(), self.cards))
         if len(matches) and len(matches) <= 3:
             for match in matches:
                 e = self._embed_card(match)
