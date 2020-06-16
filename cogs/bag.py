@@ -11,7 +11,7 @@ class Bag(commands.Cog):
         self.bag = []
         self.revealed = []
         self.valid = ['+1', '0', '-1', '-2', '-3', '-4', '-5', '-6', '-7', '-8', 'skull', 'cultist', 'tablet', 'elder-thing', 'elder-sign', 'auto-fail']
-    
+
     def _emoji(self, token):
         lookup = {
             'skull': ':skull-1:',
@@ -22,6 +22,7 @@ class Bag(commands.Cog):
             'auto-fail': ':autofail:'
         }
         return lookup.get(token, token)
+
     async def _add_to_bag(self, ctx, args):
         del args[0]
         accepted = []
@@ -120,18 +121,16 @@ class Bag(commands.Cog):
             
     @commands.command()
     async def bag(self, ctx, *args):
-        print(','.join(args))
         cmd = args[0].lower()
-        args = list(args)
-        if cmd is 'add':
+        if cmd == 'add':
             self._add_to_bag(ctx, args)
-        elif cmd is 'clear':
+        elif cmd == 'clear':
             self._clear_bag(ctx)
-        elif cmd is 'list':
+        elif cmd == 'list':
             self._list_bag(ctx)
-        elif cmd is 'draw':
+        elif cmd == 'draw':
             self._draw_token(ctx, args)
-        elif cmd is 'revealed':
+        elif cmd == 'revealed':
             self._list_revealed_tokens(ctx)
-        elif cmd is 'return':
+        elif cmd == 'return':
             self._return_tokens(ctx, args)
