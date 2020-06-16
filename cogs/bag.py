@@ -3,6 +3,8 @@ import requests
 import discord
 from discord.ext import commands
 import discord
+from discord.utils import get
+
 
 class Bag(commands.Cog):
     def __init__(self, bot):
@@ -12,14 +14,14 @@ class Bag(commands.Cog):
         self.revealed = []
         self.valid = ['+1', '0', '-1', '-2', '-3', '-4', '-5', '-6', '-7', '-8', 'skull', 'cultist', 'tablet', 'elder-thing', 'elder-sign', 'auto-fail']
 
-    def _emoji(self, token):
+    def _emoji(self, token, ctx):
         lookup = {
-            'skull': ':skull-1:',
-            'cultist': ':cultist:',
-            'tablet': ':tablet:',
-            'elder-thing': ':tentacles:',
-            'elder-sign': ':eldersign:',
-            'auto-fail': ':autofail:'
+            'skull': get(ctx.message.server.emojis, name="skull-1"),
+            'cultist': get(ctx.message.server.emojis, name="cultist"),
+            'tablet': get(ctx.message.server.emojis, name="tablet"),
+            'elder-thing': get(ctx.message.server.emojis, name="tentacles"),
+            'elder-sign': get(ctx.message.server.emojis, name="eldersign"),
+            'auto-fail': get(ctx.message.server.emojis, name="autofail")
         }
         return lookup.get(token, token)
 
@@ -31,7 +33,7 @@ class Bag(commands.Cog):
         for token in args:
             if token.lower() in self.valid:
                 self.bag.append(token)
-                accepted.append(token)
+                accepted.append(self._emoji(token, ctx))
             else:
                 rejected.append(token)
         if len(accepted):
@@ -52,7 +54,7 @@ class Bag(commands.Cog):
         e.title = 'Bag Contents'
         e.description = ''
         for token in self.bag:
-            e.description = '\n' + self._emoji(token)
+            e.description = '\n' + self._emoji(token, ctx)
         await ctx.send(embed=e)
     
     async def _list_revealed_tokens(self, ctx):
@@ -63,7 +65,7 @@ class Bag(commands.Cog):
             e.title = "Currently Revealed Tokens"
             e.description = ''
             for token in self.revealed:
-                e.description += '\n' + self._emoji(token)
+                e.description += '\n' + self._emoji(token, ctx)
             await ctx.send(embed=e)
 
     async def _draw_token(self, ctx, args):
@@ -87,7 +89,7 @@ class Bag(commands.Cog):
         e.title = 'Bag Draw'
         e.description = 'Revealed the following Token(s): '
         for token in revealed:
-            e.description += '\n' + self._emoji(token)
+            e.description += '\n' + self._emoji(token, ctx)
         e.description += '\n' + 'There are currently ' + str(len(self.revealed)) + ' revealed tokens'
         await ctx.send(embed=e)
 
