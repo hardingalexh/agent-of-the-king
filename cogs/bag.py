@@ -123,14 +123,14 @@ class Bag(commands.Cog):
     async def bag(self, ctx, *args):
         cmd = args[0].lower()
         if cmd == 'add':
-            self._add_to_bag(ctx, args)
+            await self._add_to_bag(ctx, args)
         elif cmd == 'clear':
-            self._clear_bag(ctx)
+            await self._clear_bag(ctx)
         elif cmd == 'list':
-            self._list_bag(ctx)
+            await self._list_bag(ctx)
         elif cmd == 'draw':
-            self._draw_token(ctx, args)
+            await self._draw_token(ctx, args)
         elif cmd == 'revealed':
-            self._list_revealed_tokens(ctx)
+            await self._list_revealed_tokens(ctx)
         elif cmd == 'return':
-            self._return_tokens(ctx, args)
+            await self._return_tokens(ctx, args)
