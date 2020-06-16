@@ -113,11 +113,12 @@ class Arkhamdb(commands.Cog):
         await ctx.send(embed=e)
 
     @commands.command()
-    async def card(self, ctx, *args):
-        if(len(list(args)) == 0):
-            name = 'ancient evils'
-        else:
-            name = ' '.join(list(args))
+    async def card(self, ctx, *, arg):
+        # if(len(list(args)) == 0):
+        #     name = 'ancient evils'
+        # else:
+        #     name = ' '.join(list(args))
+        name = arg
         matches = list(filter(lambda card: name.lower() in card.get('name', '').lower(), self.cards))
         if len(matches) and len(matches) <= 3:
             for match in matches:
