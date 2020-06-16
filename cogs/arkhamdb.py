@@ -132,7 +132,7 @@ class Arkhamdb(commands.Cog):
 
     @commands.command()
     async def investigator(self, ctx, faction=None):
-        investigators = list(filter(lambda card: card.get('type_code', '') == 'investigator' and card.get('permanent', True) and card.get('hidden', True), self.cards))
+        investigators = list(filter(lambda card: card.get('type_code', '') == 'investigator' and card.get('deck_requirements', False), self.cards))
         if faction:
             investigators = list(filter(lambda card: card.get('faction_code', '') == faction.lower(), investigators))
         if len(investigators) > 0:
