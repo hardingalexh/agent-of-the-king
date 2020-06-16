@@ -8,6 +8,7 @@ from discord.ext import commands
 
 from cogs.arkhamdb import Arkhamdb
 from cogs.dice import Dice
+from cogs.bag import Bag
 
 from dotenv import load_dotenv
 
@@ -30,4 +31,5 @@ async def on_message(message):
 
 bot.add_cog(Arkhamdb(bot))
 bot.add_cog(Dice(bot))
+bot.add_cog(Bag(bot))
 bot.run(token)
