@@ -66,7 +66,7 @@ class Bag(commands.Cog):
                 e.description += '\n' + self._emoji(token)
             await ctx.send(embed=e)
 
-    async def _draw_from_bag(self, ctx, args):
+    async def _draw_token(self, ctx, args):
         args = list(args)
         del args[0]
         revealed = []
