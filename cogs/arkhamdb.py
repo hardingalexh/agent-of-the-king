@@ -86,7 +86,7 @@ class Arkhamdb(commands.Cog):
 
     @commands.command()
     async def upgrade(self, ctx, target):
-        targets = list(filter(lambda card: card.get('name', "").lower() == target.lower() and card.get('xp', 0) is not 0, cards))
+        targets = list(filter(lambda card: card.get('name', "").lower() == target.lower() and card.get('xp', 0) is not 0, self.cards))
         if len(targets):
             e = self._embed_card(random.choice(list(targets)))
             await ctx.send(embed=e)
@@ -96,7 +96,7 @@ class Arkhamdb(commands.Cog):
     @commands.command()
     async def weakness(self, ctx, *args):
         weaknesses = list(filter(lambda card: card.get('subtype_code', None) ==
-                                'basicweakness' and card.get('name', "") is not "Random Basic Weakness", cards))
+                                'basicweakness' and card.get('name', "") is not "Random Basic Weakness", self.cards))
         if len(list(args)):
             def matchTraits(card):
                 matches = 0
@@ -118,7 +118,7 @@ class Arkhamdb(commands.Cog):
             name = 'ancient evils'
         else:
             name = ' '.join(list(args))
-        matches = list(filter(lambda card: name.lower() in card.get('name', '').lower(), cards))
+        matches = list(filter(lambda card: name.lower() in card.get('name', '').lower(), self.cards))
         if len(matches) and len(matches) <= 3:
             for match in matches:
                 e = self._embed_card(match)
@@ -134,7 +134,7 @@ class Arkhamdb(commands.Cog):
 
     @commands.command()
     async def investigator(self, ctx, faction=None):
-        investigators = list(filter(lambda card: card.get('type_code', '') == 'investigator' and card.get('permanent', True) and card.get('hidden', True), cards))
+        investigators = list(filter(lambda card: card.get('type_code', '') == 'investigator' and card.get('permanent', True) and card.get('hidden', True), self.cards))
         if faction:
             investigators = list(filter(lambda card: card.get('faction_code', '') == faction.lower(), investigators))
         if len(investigators) > 0:
