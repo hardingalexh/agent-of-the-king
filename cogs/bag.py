@@ -23,7 +23,8 @@ class Bag(commands.Cog):
         }
         return lookup.get(token, token)
 
-    async def _add_to_bag(self, ctx, args):
+    async def _add_to_bag(self, ctx, args):        
+        args = list(args)
         del args[0]
         accepted = []
         rejected = []
@@ -66,6 +67,7 @@ class Bag(commands.Cog):
             await ctx.send(embed=e)
 
     async def _draw_from_bag(self, ctx, args):
+        args = list(args)
         del args[0]
         revealed = []
         numTokens = 1
@@ -90,6 +92,7 @@ class Bag(commands.Cog):
         await ctx.send(embed=e)
 
     async def _return_tokens(self, ctx, args):
+        args = list(args)
         del args[0]
         if len(self.revealed) == 0:
             await ctx.send('There are no revealed tokens to return')
