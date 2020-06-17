@@ -58,3 +58,38 @@ Rolls dice and returns results.
 pickone
 ```
 Picks one from the space separated list of arguments
+
+
+### Chaos Bag
+
+```
+!bag list
+```
+Lists the contents of the bag
+
+
+```
+!bag add [space separated tokens]
+```
+Adds tokens to the bag
+
+```
+!bag remove [space separated tokens]
+```
+Removes tokens from the bag
+
+```
+!bag draw X (optional)
+```
+Draws X tokens, default 1
+
+```
+!bag return
+```
+Returns revealed tokens to the bag
+
+
+```
+!bag revealed
+```
+Lists currently revealed tokens

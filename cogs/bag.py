@@ -16,14 +16,14 @@ class Bag(commands.Cog):
 
     def _emoji(self, token, ctx):
         lookup = {
-            'skull': get(ctx.message.server.emojis, name="skull-1"),
-            'cultist': get(ctx.message.server.emojis, name="cultist"),
-            'tablet': get(ctx.message.server.emojis, name="tablet"),
-            'elder-thing': get(ctx.message.server.emojis, name="tentacles"),
-            'elder-sign': get(ctx.message.server.emojis, name="eldersign"),
-            'auto-fail': get(ctx.message.server.emojis, name="autofail")
+            'skull': "<:skulltoken:626909205177303060>",
+            'cultist': "<:cultist:626909205206532106>",
+            'tablet': "<:tablet:626909205227503616>",
+            'elder-thing': ":tentacles:626909205189885963>",
+            'elder-sign': "<:eldersign:626909205152137216>",
+            'auto-fail': "<:autofail:626909204954742784>"
         }
-        return lookup.get(token, token)
+        return lookup.get(token, False) or token
 
     async def _add_to_bag(self, ctx, args):        
         args = list(args)
@@ -44,6 +44,24 @@ class Bag(commands.Cog):
             rejString = ','.join(rejected)
             await ctx.send('Failed to add the following invalid tokens: ' + rejString)
 
+    async def _remove_from_bag(self, ctx, args):
+        args = list(args)
+        del args[0]
+        accepted = []
+        rejected = []
+        for token in args:
+            if token.lower() in self.bag:
+                self.bag.remove(token.lower())
+                accepted.append(token.lower())
+            else:
+                rejected.append(token.lower())
+        if len(accepted):
+           accString = ','.join(accepted)
+           await ctx.send('Sucessfully removed the following tokens: ' + accString)
+        if len(rejected):
+           rejString = ','.join(rejected)
+           await ctx.send('Failed to remove the following tokens: ' + rejString)
+
     async def _clear_bag(self, ctx):
         self.bag.clear()
         await ctx.send('Bag Cleared')
@@ -53,8 +71,9 @@ class Bag(commands.Cog):
         e = discord.Embed()
         e.title = 'Bag Contents'
         e.description = ''
+        print(self.bag)
         for token in self.bag:
-            e.description = '\n' + self._emoji(token, ctx)
+            e.description += '\n' + self._emoji(token, ctx)
         await ctx.send(embed=e)
     
     async def _list_revealed_tokens(self, ctx):
