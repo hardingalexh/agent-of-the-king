@@ -62,6 +62,9 @@ Picks one from the space separated list of arguments
 
 ### Chaos Bag
 
+The symbol tokens are `skull`, `cultist`, `tablet`, `elder-thing`, `auto-fail`, `elder-sign`.
+
+
 ```
 !bag list
 ```
