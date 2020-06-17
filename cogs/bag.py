@@ -19,7 +19,7 @@ class Bag(commands.Cog):
             'skull': "<:skulltoken:626909205177303060>",
             'cultist': "<:cultist:626909205206532106>",
             'tablet': "<:tablet:626909205227503616>",
-            'elder-thing': ":tentacles:626909205189885963>",
+            'elder-thing': "<:tentacles:626909205189885963>",
             'elder-sign': "<:eldersign:626909205152137216>",
             'auto-fail': "<:autofail:626909204954742784>"
         }
