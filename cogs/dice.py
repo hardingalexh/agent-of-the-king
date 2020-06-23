@@ -56,7 +56,7 @@ class Dice(commands.Cog):
         if character and character.lower() == 'jeff':
             faces = ['', '', '', ex, ex, ex]
         e = discord.Embed()
-        e.tile = "Funkoverse Strategy Game Dice Roll"
+        e.title = "Funkoverse Strategy Game Dice Roll"
         e.description = ''
         for roll in range(quantity):
             e.description += '\n' + random.choice(faces)
