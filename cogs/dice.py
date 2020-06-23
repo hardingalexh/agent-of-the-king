@@ -58,6 +58,6 @@ class Dice(commands.Cog):
         e = discord.Embed()
         e.title = "Funkoverse Strategy Game Dice Roll"
         e.description = ''
-        for roll in range(quantity):
+        for roll in range(int(quantity)):
             e.description += '\n' + random.choice(faces)
         await ctx.send(embed=e)
