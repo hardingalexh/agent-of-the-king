@@ -53,11 +53,13 @@ class Dice(commands.Cog):
         boom = u"\U0001F4A5"
         ex =  u"\u2757" + u"\u2757" + u"\u2757"
         faces = [shield, shield, boom, boom, boom, ex]
-        if character and character.lower() == 'jeff':
-            faces = ['', '', '', ex, ex, ex]
+        jeffFaces = [' ', ' ', ' ', ex, ex, ex]
         e = discord.Embed()
         e.title = "Funkoverse Strategy Game Dice Roll"
         e.description = ''
         for roll in range(int(quantity)):
-            e.description += '\n' + random.choice(faces)
+            if roll == 1 and character and character.lower() == 'jeff':
+                e.description += '\n' + random.choice(jeffFaces)
+            else:
+                e.description += '\n' + random.choice(faces)
         await ctx.send(embed=e)
