@@ -51,7 +51,7 @@ class Dice(commands.Cog):
     async def funko(self, ctx, quantity, character=None):
         shield = u'\U0001F6E1'
         boom = u"\U0001F4A5"
-        ex = u'\u0021' + u'\u0021' + u'\u0021'
+        ex =  u"\u2757" + u"\u2757" + u"\u2757"
         faces = [shield, shield, boom, boom, boom, ex]
         if character and character.lower() == 'jeff':
             faces = ['', '', '', ex, ex, ex]
