@@ -8,12 +8,12 @@ class Dice(commands.Cog):
         self._last_member = None
     
     ## Dice commands
-    @commands.command(name='cointoss')
+    @commands.command()
     async def cointoss(self, ctx):
         await ctx.send(random.choice(['Heads', 'Tails']))
 
-    @commands.command(name='roll')
-    async def roll_dice(self, ctx, dice):
+    @commands.command()
+    async def roll(self, ctx, dice):
         split = dice.lower().split('d')
         if split[0] == '':
             split[0] = 1
@@ -43,6 +43,21 @@ class Dice(commands.Cog):
 
             await ctx.send(embed=e)
 
-    @commands.command(name="pickone")
+    @commands.command()
     async def pickone(self, ctx, *args):
         await ctx.send(random.choice(args))
+    
+    @commands.command()
+    async def funko(self, ctx, quantity, character=None):
+        shield = u'\U0001F6E1'
+        boom = u"\U0001F4A5"
+        ex = u'\u0021' + u'\u0021' + u'\u0021'
+        faces = [shield, shield, boom, boom, boom, ex]
+        if character and character.lower() == 'jeff':
+            faces = ['', '', '', ex, ex, ex]
+        e = discord.Embed()
+        e.tile = "Funkoverse Strategy Game Dice Roll"
+        e.description = ''
+        for roll in range(quantity):
+            e.description += '\n' + random.choice(faces)
+        await ctx.send(embed=e)
