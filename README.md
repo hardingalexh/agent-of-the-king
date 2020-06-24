@@ -59,6 +59,10 @@ pickone
 ```
 Picks one from the space separated list of arguments
 
+```
+funko [dice] [character=none]
+```
+Rolls dice for the funkoverse strategy game. Optional characters parameter for characters with special dice (like Ian Malcolm). 
 
 ### Chaos Bag
 
