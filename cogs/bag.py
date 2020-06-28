@@ -1,8 +1,6 @@
 import random
-import requests
 import discord
 from discord.ext import commands
-import discord
 from discord.utils import get
 
 
