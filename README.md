@@ -100,3 +100,21 @@ Returns revealed tokens to the bag
 !bag revealed
 ```
 Lists currently revealed tokens
+
+### Blob
+State management for Arkham's "The Blob That Ate Everything" Secnario
+
+```
+!blob setup X
+```
+Sets up blob event for X number of investigators
+
+```
+!blob status
+```
+Prints the status of all current blob attributes (damage, supplies, clues)
+
+```
+!blob [param] [quantity]
+```
+Increments the various blob attributes and prints status. Valid params are `supplies`, `clues` and `damage`. Quantity can be negative. For example, `!blob supplies 2` adds two supplies, `!blob clues -10` spends 10 clues.
