@@ -1,3 +1,6 @@
+import discord
+from discord.ext import commands
+
 class Blob(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -12,10 +15,10 @@ class Blob(commands.Cog):
         self.clues = 0
         self.damage = 0
         self.supplies = 0
-        await ctx.send('Set up the blob for ' + str(param) + 'players')
+        await ctx.send('Set up the blob for ' + str(param) + ' players')
         await self._status(ctx)
 
-    async def _status(ctx):
+    async def _status(self, ctx):
         e = discord.Embed()
         e.title = "The Blob That Ate Everything"
         e.description = ""
@@ -24,17 +27,18 @@ class Blob(commands.Cog):
         e.description += "\n Damage: " + str(self.damage)
         await ctx.send(embed=e)
 
-    async def _add(ctx, cmd, param):
-        self[cmd] += param
-        await ctx.send(param + ' ' + str(cmd))
+    async def _add(self, ctx, cmd, param):
+        setattr(self, cmd, getattr(self, cmd) + param)
+        await ctx.send(str(param) + ' ' + cmd)
         await self._status(ctx)
 
     @commands.command()
     async def blob(self, ctx, *args):
         cmd = args[0].lower()
-        param = int(args[1]) if args[1] else 0
+        param = int(args[1]) if len(args) == 2 else 0
         if cmd == 'setup':
            await self._setup(ctx, param)
         elif cmd == 'status':
+           await self._status(ctx)
         elif cmd in ['supplies', 'damage', 'clues']:
            await self._add(ctx, cmd, param)
