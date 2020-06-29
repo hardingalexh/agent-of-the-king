@@ -46,26 +46,3 @@ class Dice(commands.Cog):
     @commands.command()
     async def pickone(self, ctx, *args):
         await ctx.send(random.choice(args))
-    
-    @commands.command()
-    async def funko(self, ctx, quantity, character=None):
-        shield = u'\U0001F6E1'
-        boom = u"\U0001F4A5"
-        ex =  "!!!"
-        faces = [shield, shield, boom, boom, boom, ex]
-        jeffFaces = ['Blank', 'Blank', 'Blank', ex, ex, ex]
-        e = discord.Embed()
-        e.title = "Funkoverse Strategy Game Dice Roll"
-        e.description = ''
-        quantity = int(quantity)
-
-        if quantity > 100:
-            await ctx.send("I can only count to 100 on either hand. Try again with 100 or less dice.")
-            return
-
-        for roll in range(int(quantity)):
-            if roll == 0 and character and character.lower() == 'jeff':
-                e.description += '\n' + random.choice(jeffFaces)
-            else:
-                e.description += '\n' + random.choice(faces)
-        await ctx.send(embed=e)

@@ -10,6 +10,7 @@ from cogs.arkhamdb import Arkhamdb
 from cogs.dice import Dice
 from cogs.bag import Bag
 from cogs.blob import Blob
+from cogs.funko import Funko
 
 from dotenv import load_dotenv
 
@@ -34,4 +35,5 @@ bot.add_cog(Arkhamdb(bot))
 bot.add_cog(Dice(bot))
 bot.add_cog(Bag(bot))
 bot.add_cog(Blob(bot))
+bot.add_cog(Funko(bot))
 bot.run(token)
