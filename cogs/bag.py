@@ -136,7 +136,7 @@ class Bag(commands.Cog):
                 arg = arg.lower()
                 if arg in self.revealed:
                     self.bag.append(arg)
-                    self.returned.append(self._emoji(arg))
+                    returned.append(self._emoji(arg))
                     self.revealed.remove(arg)
                 else:
                     rejected.append(self._emoji(arg))
