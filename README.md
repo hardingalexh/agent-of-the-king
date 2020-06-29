@@ -14,7 +14,11 @@ Run `docker-compose restart arkham_py` to restart bot to apply changes
 ## Commands
 
 
-### Arkham-related
+### Arkhamdb-related
+
+If a message includes a link to a deck on arkhamDB, it will be parsed and displayed.
+
+
 ```
 !refresh
 ```
@@ -41,29 +45,6 @@ Searches for all matches for the card name that are not level 0, and returns a r
 
 Chooses a random investigator, optionally for a given faction.
 ```
-
-### Randomization
-
-```
-!cointoss
-```
-Returns heads or tails
-
-```
-!roll [dice: format XdY where X is quantity of dice, Y is sides on die]
-```
-Rolls dice and returns results.
-
-```
-pickone
-```
-Picks one from the space separated list of arguments
-
-```
-funko [dice] [character=none]
-```
-Rolls dice for the funkoverse strategy game. Optional characters parameter for characters with special dice (like Ian Malcolm). 
-
 ### Chaos Bag
 
 The symbol tokens are `skull`, `cultist`, `tablet`, `elder-thing`, `auto-fail`, `elder-sign`.
@@ -118,3 +99,30 @@ Prints the status of all current blob attributes (damage, supplies, clues)
 !blob [param] [quantity]
 ```
 Increments the various blob attributes and prints status. Valid params are `supplies`, `clues` and `damage`. Quantity can be negative. For example, `!blob supplies 2` adds two supplies, `!blob clues -10` spends 10 clues.
+
+
+### Randomization and dice
+
+```
+!cointoss
+```
+Returns heads or tails
+
+```
+!roll [dice: format XdY where X is quantity of dice, Y is sides on die]
+```
+Rolls dice and returns results.
+
+```
+pickone
+```
+Picks one from the space separated list of arguments
+
+
+
+### Funkoverse Strategy Game
+
+```
+funko [dice] [character=none]
+```
+Rolls dice for the funkoverse strategy game. Optional characters parameter for characters with special dice (like Ian Malcolm). 
