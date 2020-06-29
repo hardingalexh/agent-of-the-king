@@ -11,8 +11,13 @@ class Bag(commands.Cog):
         self.bag = []
         self.revealed = []
         self.valid = ['+1', '0', '-1', '-2', '-3', '-4', '-5', '-6', '-7', '-8', 'skull', 'cultist', 'tablet', 'elder-thing', 'elder-sign', 'auto-fail']
+    
+    @commands.group(brief="Manages state for an arkham chaos bag. Type !bag help for further info.")
+    async def bag(self, ctx):
+        if ctx.invoked_subcommand is None:
+            await ctx.send('Invalid blob command passed...')
 
-    def _emoji(self, token, ctx):
+    def _emoji(self, token):
         lookup = {
             'skull': "<:skulltoken:626909205177303060>",
             'cultist': "<:cultist:626909205206532106>",
@@ -23,15 +28,14 @@ class Bag(commands.Cog):
         }
         return lookup.get(token, False) or token
 
-    async def _add_to_bag(self, ctx, args):        
-        args = list(args)
-        del args[0]
+    @bag.command(usage="[space separated tokens]", help="Adds a space-separated list of tokens to the bag. Symbol tokens are called skull, cultist, tablet, elder-thing, elder-sign and auto-fail")
+    async def add(self, ctx, *args):
         accepted = []
         rejected = []
         for token in args:
             if token.lower() in self.valid:
                 self.bag.append(token)
-                accepted.append(self._emoji(token, ctx))
+                accepted.append(self._emoji(token))
             else:
                 rejected.append(token)
         if len(accepted):
@@ -42,9 +46,8 @@ class Bag(commands.Cog):
             rejString = ','.join(rejected)
             await ctx.send('Failed to add the following invalid tokens: ' + rejString)
 
-    async def _remove_from_bag(self, ctx, args):
-        args = list(args)
-        del args[0]
+    @bag.command(usage="[space separated tokens]", help="Removes a space-separated list of tokens from the bag. Symbol tokens are called skull, cultist, tablet, elder-thing, elder-sign and auto-fail")
+    async def remove(self, ctx, *args):
         accepted = []
         rejected = []
         for token in args:
@@ -60,21 +63,24 @@ class Bag(commands.Cog):
            rejString = ','.join(rejected)
            await ctx.send('Failed to remove the following tokens: ' + rejString)
 
-    async def _clear_bag(self, ctx):
+    @bag.command(help="Clears all tokens from the bag")
+    async def clear(self, ctx):
         self.bag.clear()
         await ctx.send('Bag Cleared')
     
-    async def _list_bag(self, ctx):
+    @bag.command(name="list", help="Lists all tokens currently in the bag")
+    async def _list(self, ctx):
         self.bag.sort()
         e = discord.Embed()
         e.title = 'Bag Contents'
         e.description = ''
         print(self.bag)
         for token in self.bag:
-            e.description += '\n' + self._emoji(token, ctx)
+            e.description += '\n' + self._emoji(token)
         await ctx.send(embed=e)
     
-    async def _list_revealed_tokens(self, ctx):
+    @bag.command(help="Lists all tokens currently revealed")
+    async def revealed(self, ctx):
         if len(self.revealed) == 0:
             await ctx.send('There are no revealed tokens')
         else:
@@ -82,21 +88,22 @@ class Bag(commands.Cog):
             e.title = "Currently Revealed Tokens"
             e.description = ''
             for token in self.revealed:
-                e.description += '\n' + self._emoji(token, ctx)
+                e.description += '\n' + self._emoji(token)
             await ctx.send(embed=e)
 
-    async def _draw_token(self, ctx, args):
-        args = list(args)
-        del args[0]
+    @bag.command(usage="<quantity, default 1>", help="Draws tokens from the bag, leaving them in the revealed area. If no quantity is listed, it will default to one token. Remember to return to the bag using !bag return after drawing.")
+    async def draw(self, ctx, quantity=1):
         revealed = []
-        numTokens = 1
-        if len(args):
-            numTokens = int(args[0])
-        if numTokens > len(self.bag):
-            await ctx.send('There are no tokens in the bag')
+        quantity = int(quantity)
+        if not quantity:
+            await ctx.send('Invalid quantity of tokens')
+            return
+        
+        if quantity > len(self.bag):
+            await ctx.send('There are not enough tokens in the bag')
             return
 
-        for num in range(numTokens):
+        for num in range(quantity):
             token = random.choice(self.bag)
             revealed.append(token)
             self.revealed.append(token)
@@ -106,13 +113,12 @@ class Bag(commands.Cog):
         e.title = 'Bag Draw'
         e.description = 'Revealed the following Token(s): '
         for token in revealed:
-            e.description += '\n' + self._emoji(token, ctx)
+            e.description += '\n' + self._emoji(token)
         e.description += '\n' + 'There are currently ' + str(len(self.revealed)) + ' revealed tokens'
         await ctx.send(embed=e)
 
-    async def _return_tokens(self, ctx, args):
-        args = list(args)
-        del args[0]
+    @bag.command(name="return", usage="[tokens], default all", help="Returns the specified tokens to the bag from the revealed area. If no tokens are specified, all revealed tokens will be returned.")
+    async def _return(self, ctx, *args):
         if len(self.revealed) == 0:
             await ctx.send('There are no revealed tokens to return')
             return
@@ -140,19 +146,3 @@ class Bag(commands.Cog):
             if len(rejected) > 0:
                 rejString = ','.join(rejected)
                 await ctx.send('The following tokens were not revealed, and therefore could not be returned to the bag: ' + rejString)
-            
-    @commands.command()
-    async def bag(self, ctx, *args):
-        cmd = args[0].lower()
-        if cmd == 'add':
-            await self._add_to_bag(ctx, args)
-        elif cmd == 'clear':
-            await self._clear_bag(ctx)
-        elif cmd == 'list':
-            await self._list_bag(ctx)
-        elif cmd == 'draw':
-            await self._draw_token(ctx, args)
-        elif cmd == 'revealed':
-            await self._list_revealed_tokens(ctx)
-        elif cmd == 'return':
-            await self._return_tokens(ctx, args)
