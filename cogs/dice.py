@@ -8,11 +8,11 @@ class Dice(commands.Cog):
         self._last_member = None
     
     ## Dice commands
-    @commands.command()
+    @commands.command(help="Returns heads or tails")
     async def cointoss(self, ctx):
         await ctx.send(random.choice(['Heads', 'Tails']))
 
-    @commands.command()
+    @commands.command(usage="<XdY>", help="Rolls X dice of Y sides. For example, !roll 3d6 will roll 3 D6s. If a number of dice is not specified, 1 roll will be made. For example, !roll d6 will roll a single d6.")
     async def roll(self, ctx, dice):
         split = dice.lower().split('d')
         if split[0] == '':
@@ -43,6 +43,6 @@ class Dice(commands.Cog):
 
             await ctx.send(embed=e)
 
-    @commands.command()
+    @commands.command(usage="[any number of space separated things]", help="Chooses one from the list provided")
     async def pickone(self, ctx, *args):
         await ctx.send(random.choice(args))

@@ -7,7 +7,7 @@ class Funko(commands.Cog):
         self.bot = bot
         self._last_member = None
     
-    @commands.command()
+    @commands.command(usage="<quantity> <character (optional)", help="Rolls dice for the funkoverse strategy game. Specify a character for character-specific die rolls.")
     async def funko(self, ctx, quantity, character=None):
         shield = u'\U0001F6E1'
         boom = u"\U0001F4A5"

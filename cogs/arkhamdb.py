@@ -84,7 +84,7 @@ class Arkhamdb(commands.Cog):
         self.cards = self._get_cards()
         await ctx.send('Card pool refreshed')
 
-    @commands.command(usage="!upgrade <card name>", help="Selects a random copy of card level 1 or higher with the given name")
+    @commands.command(usage="<card name>", help="Selects a random copy of card level 1 or higher with the given name")
     async def upgrade(self, ctx, *, arg):
         targets = list(filter(lambda card: card.get('name', "").lower() == arg.lower() and card.get('xp', 0) is not 0, self.cards))
         if len(targets):
@@ -93,7 +93,7 @@ class Arkhamdb(commands.Cog):
         else:
             await ctx.send("No matches for " + arg)
 
-    @commands.command(usage="!weakness [traits, space separated]", help="Chooses a random basic weakness. If any traits are listed, it will find a weakness that matches any of these traits.")
+    @commands.command(usage="[traits, space separated]", help="Chooses a random basic weakness. If any traits are listed, it will find a weakness that matches any of these traits.")
     async def weakness(self, ctx, *args):
         weaknesses = list(filter(lambda card: card.get('subtype_code', None) ==
                                 'basicweakness' and card.get('name', "") is not "Random Basic Weakness", self.cards))
@@ -112,7 +112,7 @@ class Arkhamdb(commands.Cog):
         e = self._embed_card(weakness)
         await ctx.send(embed=e)
 
-    @commands.command(usage="!card <search string>", help="Finds and embeds all cards matching your query, up to 10 matches. Embeds a card image if the image exists on ArkhamDB.")
+    @commands.command(usage="<search string>", help="Finds and embeds all cards matching your query, up to 10 matches. Embeds a card image if the image exists on ArkhamDB.")
     async def card(self, ctx, *, arg):
         if not arg:
             arg = 'ancient evils'
@@ -130,7 +130,7 @@ class Arkhamdb(commands.Cog):
         else:
             await ctx.send('No matches')
 
-    @commands.command(usage="!investigator <faction (optional)", help="Chooses a random investigator. Specify a faction to only choose from that faction.")
+    @commands.command(usage="<faction (optional)>", help="Chooses a random investigator. Specify a faction to only choose from that faction.")
     async def investigator(self, ctx, faction=None):
         investigators = list(filter(lambda card: card.get('type_code', '') == 'investigator' and card.get('deck_requirements', False) is not False, self.cards))
         if faction:
