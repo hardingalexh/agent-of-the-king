@@ -12,10 +12,10 @@ class Bag(commands.Cog):
         self.revealed = []
         self.valid = ['+1', '0', '-1', '-2', '-3', '-4', '-5', '-6', '-7', '-8', 'skull', 'cultist', 'tablet', 'elder-thing', 'elder-sign', 'auto-fail']
     
-    @commands.group(brief="Manages state for an arkham chaos bag. Type !bag help for further info.")
+    @commands.group(brief="Manages state for an arkham chaos bag. Type !help bag for further info.")
     async def bag(self, ctx):
         if ctx.invoked_subcommand is None:
-            await ctx.send('Invalid blob command passed...')
+            await ctx.send('Invalid bag command passed...')
 
     def _emoji(self, token):
         lookup = {
