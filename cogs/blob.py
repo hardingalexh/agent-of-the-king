@@ -1,9 +1,6 @@
 import discord
 from discord.ext import commands
 
-usage = "<setup X> or <status> or <supplies/damage/clues X>"
-help = "Manages state for playing the blob that ate everything, using multiple commands"
-
 class Blob(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -13,7 +10,7 @@ class Blob(commands.Cog):
         self.damage = 0
         self.supplies = 0
     
-    @commands.group()
+    @commands.group(brief="Manages state for playing the blob that ate everything, using multiple commands. Type !help blob for more info.")
     async def blob(self, ctx):
         if ctx.invoked_subcommand is None:
             await ctx.send('Invalid blob command passed...')
