@@ -34,8 +34,19 @@ class Blob(commands.Cog):
         e.description += "\n Damage: " + str(self.damage)
         await ctx.send(embed=e)
 
-    @blob.command(usage="<supplies/damage/clues> X", help="Adds or subtracts the number of the specified context. For example, !blob supplies 2 or !blob supplies +2 would add 2 supplies, !blob supplies -2 would remove 2 supplies.")
-    async def add(self, ctx, category, quantity):
+    @blob.command(usage="<quantity>", help="Adds or subtracts the given number of supplies. For example, !blob supplies 1 adds 1 supply, !blob supplies -3 removes 3 supplies.")
+    async def supplies(self, ctx, quantity):
+        await self._add(ctx, 'supplies', quantity)
+    
+    @blob.command(usage="<quantity>", help="Adds or subtracts the given number of damage. For example, !blob damage 1 adds 1 supply, !blob damage -3 removes 3 damage.")
+    async def damage(self, ctx, quantity):
+        await self._add(ctx, 'damage', quantity)
+    
+    @blob.command(usage="<quantity>", help="Adds or subtracts the given number of clues. For example, !blob clues 1 adds 1 supply, !blob clues -3 removes 3 clues.")
+    async def clues(self, ctx, quantity):
+        await self._add(ctx, 'clues', quantity)
+    
+    async def _add(self, ctx, category, quantity):
         category = category.lower()
         if category not in ['supplies', 'clues', 'damage']:
             await ctx.send(category + ' is not a valid category. Try again with supplies, damage or clues.')    
