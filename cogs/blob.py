@@ -1,6 +1,9 @@
 import discord
 from discord.ext import commands
 
+usage = "<setup X> or <status> or <supplies/damage/clues X>"
+help = "Manages state for playing the blob that ate everything, using multiple commands"
+
 class Blob(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -9,16 +12,23 @@ class Blob(commands.Cog):
         self.clues = 0
         self.damage = 0
         self.supplies = 0
+    
+    @commands.group()
+    async def blob(self, ctx):
+        if ctx.invoked_subcommand is None:
+            await ctx.send('Invalid blob command passed...')
 
-    async def _setup(self, ctx, param):
+    @blob.command(usage="<player count>", help="Sets up a new blob scenario for the given player count")
+    async def setup(self, ctx, param):
         self.players = param
         self.clues = 0
         self.damage = 0
         self.supplies = 0
         await ctx.send('Set up the blob for ' + str(param) + ' players')
-        await self._status(ctx)
+        await self.status(ctx)
 
-    async def _status(self, ctx):
+    @blob.command(help="Prints the status of the current blob event")    
+    async def status(self, ctx):
         e = discord.Embed()
         e.title = "The Blob That Ate Everything"
         e.description = ""
@@ -27,18 +37,12 @@ class Blob(commands.Cog):
         e.description += "\n Damage: " + str(self.damage)
         await ctx.send(embed=e)
 
-    async def _add(self, ctx, cmd, param):
-        setattr(self, cmd, getattr(self, cmd) + param)
-        await ctx.send(str(param) + ' ' + cmd)
-        await self._status(ctx)
-
-    @commands.command()
-    async def blob(self, ctx, *args):
-        cmd = args[0].lower()
-        param = int(args[1]) if len(args) == 2 else 0
-        if cmd == 'setup':
-           await self._setup(ctx, param)
-        elif cmd == 'status':
-           await self._status(ctx)
-        elif cmd in ['supplies', 'damage', 'clues']:
-           await self._add(ctx, cmd, param)
+    @blob.command(usage="<supplies/damage/clues> X", help="Adds or subtracts the number of the specified context. For example, !blob supplies 2 or !blob supplies +2 would add 2 supplies, !blob supplies -2 would remove 2 supplies.")
+    async def add(self, ctx, category, quantity):
+        category = category.lower()
+        if category not in ['supplies', 'clues', 'damage']:
+            await ctx.send(category + ' is not a valid category. Try again with supplies, damage or clues.')    
+            return
+        setattr(self, category, getattr(self, category) + int(quantity))
+        await ctx.send(str(quantity) + ' ' + category)
+        await self.status(ctx)
