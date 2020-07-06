@@ -1,3 +1,4 @@
+import re
 import random
 import requests
 import discord
@@ -48,7 +49,7 @@ class Arkhamdb(commands.Cog):
                 apiString = 'https://arkhamdb.com/api/public/decklist/' + deckId
             deckJson = requests.get(apiString).json()
             # create initial embed using investigator card image
-            gator = list(filter(lambda card: card.get('code', 0) == deckJson.get('investigator_code', None), cards))[0]
+            gator = list(filter(lambda card: card.get('code', 0) == deckJson.get('investigator_code', None), self.cards))[0]
             e = discord.Embed()
             e.description = ''
             # set title to deck name with appropriate url
@@ -58,7 +59,7 @@ class Arkhamdb(commands.Cog):
             if (deckType == 'decklist'):
                 e.url = 'https://arkhamdb.com/decklist/view/'+ deckId
             categories = ['Asset', 'Permanent', 'Event', 'Skill', 'Treachery']
-            deckCards = list(filter(lambda card: card.get('code', '') in deckJson.get('slots', {}).keys(), cards))
+            deckCards = list(filter(lambda card: card.get('code', '') in deckJson.get('slots', {}).keys(), self.cards))
             for category in categories:
                 if(category == 'Permanent'):
                     categoryCards = list(filter(lambda card: card.get('permanent', False) == True, deckCards))
