@@ -130,6 +130,43 @@ class Arkhamdb(commands.Cog):
             await ctx.send('More than 10 matches, please refine your search')
         else:
             await ctx.send('No matches')
+    
+     @commands.command(usage="<search string>", help="Finds and lists all cards with at least one trait matching your query, up to 100 matches.")
+    async def trait(self, ctx, *args):
+        if len(list(args)):
+            def matchTraits(card):
+                matches = 0
+                for trait in list(args):
+                    if trait.lower() in card.get('traits', '').lower():
+                        matches += 1
+                if matches > 0:
+                    return True
+                return False
+            matched = list(filter(matchTraits, cards))
+            if len(matched) > 100:
+                await ctx.send('More than 100 matches. Please refine your search.')
+            else:
+                e = discord.Embed()
+                e.title = "Traits Search: " + ', '.join(list(args))
+                e.description = ''
+                
+                def faction(e):
+                    return e.get('faction_code', '')
+
+                matched.sort(key=faction)
+                factions = []
+                
+                for match in list(matched):
+                    if match.get('faction_code', '') not in factions:
+                        e.description += '\n' + match.get('faction_name') ": \n"
+                        factions.append(match.get('faction_code', ''))
+                    e.description += match.get('name', '')
+                    if match.get('xp', 0) > 0:
+                        e.description += ' (' + str(match.get('xp'))  + ')'
+                    e.description += ': ' + match.get('traits', '') + '\n'
+                await ctx.send(embed=e)
+                    
+
 
     @commands.command(usage="<faction (optional)>", help="Chooses a random investigator. Specify a faction to only choose from that faction.")
     async def investigator(self, ctx, faction=None):
