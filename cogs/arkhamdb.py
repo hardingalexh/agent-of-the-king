@@ -69,22 +69,22 @@ class Arkhamdb(commands.Cog):
                     e.description += '\n' + 'Treacheries:'
                 else:
                     e.description += '\n ' + category + 's:'
-                
+
                 if category == 'Asset':
                     def slotFilter(e):
-                        return e.get('slot', '')
+                        return e.get('slot', 'zzzzzz')
                     categoryCards.sort(key=slotFilter)
                     slots = []
-                
+
                 for card in categoryCards:
-                    
+
                     cardString = str(deckJson.get('slots')[card.get('code')]) + 'x '
                     cardString += card.get('name', '')
                     if card.get('xp', 0) > 0:
                         cardString += ' (' + str(card.get('xp', 0)) + ')'
-                    
+
                     if category == 'Asset' and card.get('slot', '') not in slots:
-                        e.description += '\n' + card.get('slot') + ': \n'
+                        e.description += '\n' + card.get('slot', 'Other') + ':'
                         slots.append(card.get('slot', ''))
                     e.description += '\n' + cardString
                 e.description += '\n'
