@@ -69,11 +69,23 @@ class Arkhamdb(commands.Cog):
                     e.description += '\n' + 'Treacheries:'
                 else:
                     e.description += '\n ' + category + 's:'
+                
+                if category == 'Asset':
+                    def slotFilter(e):
+                        return e.get('slot', '')
+                    categoryCards.sort(key=slotFilter)
+                    slots = []
+                
                 for card in categoryCards:
+                    
                     cardString = str(deckJson.get('slots')[card.get('code')]) + 'x '
                     cardString += card.get('name', '')
                     if card.get('xp', 0) > 0:
                         cardString += ' (' + str(card.get('xp', 0)) + ')'
+                    
+                    if category == 'Asset' and card.get('slot', '') not in slots:
+                        e.description += '\n' + card.get('slot') + ': \n'
+                        slots.append(card.get('slot', ''))
                     e.description += '\n' + cardString
                 e.description += '\n'
             await message.channel.send(embed=e)
@@ -143,9 +155,7 @@ class Arkhamdb(commands.Cog):
                     return True
                 return False
             matched = list(filter(matchTraits, self.cards))
-            if len(matched) > 100:
-                await ctx.send('More than 100 matches. Please refine your search.')
-            else:
+            try:
                 e = discord.Embed()
                 e.title = "Traits Search: " + ', '.join(list(args))
                 e.description = ''
@@ -155,7 +165,6 @@ class Arkhamdb(commands.Cog):
 
                 matched.sort(key=faction)
                 factions = []
-
                 for match in list(matched):
                     if match.get('faction_code', '') not in factions:
                         e.description += '\n' + match.get('faction_name') + ": \n"
@@ -165,8 +174,8 @@ class Arkhamdb(commands.Cog):
                         e.description += ' (' + str(match.get('xp'))  + ')'
                     e.description += '\n'
                 await ctx.send(embed=e)
-
-
+            except:
+                await ctx.send('The results of your search are too large for discord. Please try refining your search.')
 
     @commands.command(usage="<faction (optional)>", help="Chooses a random investigator. Specify a faction to only choose from that faction.")
     async def investigator(self, ctx, faction=None):
