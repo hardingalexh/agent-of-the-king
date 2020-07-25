@@ -61,6 +61,11 @@ class Blob(commands.Cog):
         if category not in ['countermeasures', 'clues', 'damage']:
             await ctx.send(category + ' is not a valid category. Try again with countermeasures, damage or clues.')    
             return
+        if getattr(self, category) + int(quantity) < 0:
+           await ctx.send('Invalid command: ' + category + " can't be reduced below 0")
+           return
         setattr(self, category, getattr(self, category) + int(quantity))
         await ctx.send(str(quantity) + ' ' + category)
         await self.status(ctx)
+        if category == 'damage' and self.damage >= int(self.players) * 15:
+            await ctx.send('The blob is defeated! The investigators win!')
