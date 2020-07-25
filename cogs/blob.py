@@ -36,8 +36,8 @@ class Blob(commands.Cog):
         timeremaining = endtime - datetime.now()
         e.title = "The Blob That Ate Everything"
         e.description = ""
-        e.description += "\n Start Time: " + self.starttime.strftime("%H:%M")
-        e.description += "\n End Time: " + endtime.strftime("%H:%M")
+        e.description += "\n Start Time: " + self.starttime.strftime("%I:%M %p")
+        e.description += "\n End Time: " + endtime.strftime("%I:%M %p")
         e.description += "\n Time Remaining: " + str(math.floor(timeremaining.seconds / 60)) + ' Minutes'
         e.description += "\n Countermeasures: " + str(self.countermeasures)
         e.description += "\n Clues: " + str(self.clues) + '/' + str(self.players * 2)
