@@ -1,6 +1,7 @@
 import discord
 import math
 from datetime import datetime
+from datetime import timedelta
 from discord.ext import commands
 
 class Blob(commands.Cog):
@@ -31,12 +32,12 @@ class Blob(commands.Cog):
     @blob.command(help="Prints the status of the current blob event")    
     async def status(self, ctx):
         e = discord.Embed()
-        endtime = self.starttime + datetime.timedelta(seconds=60*180)
+        endtime = self.starttime + timedelta(seconds=60*180)
         timeremaining = endtime - datetime.now()
         e.title = "The Blob That Ate Everything"
         e.description = ""
-        e.description += "\n Start Time: " + self.starttime.strptime("%H:%M")
-        e.description += "\n End Time: " + self.endtime.strptime("%H:%M")
+        e.description += "\n Start Time: " + self.starttime.strftime("%H:%M")
+        e.description += "\n End Time: " + endtime.strftime("%H:%M")
         e.description += "\n Time Remaining: " + str(math.floor(timeremaining.seconds / 60)) + ' Minutes'
         e.description += "\n Countermeasures: " + str(self.countermeasures)
         e.description += "\n Clues: " + str(self.clues) + '/' + str(self.players * 2)
