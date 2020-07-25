@@ -39,7 +39,7 @@ class Blob(commands.Cog):
         e.description += "\n End Time: " + self.endtime.strptime("%H:%M")
         e.description += "\n Time Remaining: " + str(math.floor(timeremaining.seconds / 60)) + ' Minutes'
         e.description += "\n Countermeasures: " + str(self.countermeasures)
-        e.description += "\n Clues: " + str(self.clues) = '/' + str(self.players * 2)
+        e.description += "\n Clues: " + str(self.clues) + '/' + str(self.players * 2)
         e.description += "\n Damage: " + str(self.damage) + '/' + str(self.players * 15)
         await ctx.send(embed=e)
 
