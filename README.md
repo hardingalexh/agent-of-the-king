@@ -34,6 +34,10 @@ Searches for a card. Note that cards with multiple words require spaces. For exa
 ```
 Searches for a random basic weakness. Define any number of parameters. These are not additive - searching `!weakness madness pact` will not only allow weaknesses that are both madness AND pact, it will allow weaknesses that are madness AND/OR pact.
 
+```
+!weaknesses <quantity> [solo or multi, default multi]
+```
+Picks `<quantity>` random basic weaknesses, ignoring "campaign mode only" weaknesses. If "solo" is passed as the second argument, also ignores all "multiplayer only" weaknesses.
 
 ```
 !upgrade [card]
@@ -98,7 +102,7 @@ Prints the status of all current blob attributes (damage, supplies, clues)
 ```
 !blob [param] [quantity]
 ```
-Increments the various blob attributes and prints status. Valid params are `supplies`, `clues` and `damage`. Quantity can be negative. For example, `!blob supplies 2` adds two supplies, `!blob clues -10` spends 10 clues.
+Increments the various blob attributes and prints status. Valid params are `countermeasures`, `clues` and `damage`. Quantity can be negative. For example, `!blob countermeasures 2` adds two countermeasures, `!blob clues -10` spends 10 clues.
 
 
 ### Randomization and dice
