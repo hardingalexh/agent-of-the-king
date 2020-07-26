@@ -109,7 +109,7 @@ class Arkhamdb(commands.Cog):
     @commands.command(usage="[traits, space separated]", help="Chooses a random basic weakness. If any traits are listed, it will find a weakness that matches any of these traits.")
     async def weakness(self, ctx, *args):
         weaknesses = list(filter(lambda card: card.get('subtype_code', None) ==
-                                'basicweakness' and card.get('name', "") is not "Random Basic Weakness", self.cards))
+                                'basicweakness' and card.get('name', "").lower() !=  "random basic weakness", self.cards))
         if len(list(args)):
             def matchTraits(card):
                 matches = 0
@@ -124,6 +124,29 @@ class Arkhamdb(commands.Cog):
         weakness = random.choice(list(weaknesses))
         e = self._embed_card(weakness)
         await ctx.send(embed=e)
+
+    @commands.command(useage="<number of weaknesses> <solo>", help="Returns the given number of basic weaknesses, excluding 'campaign only' weaknesses. If s is 'solo', it will also exclude 'multiplayer only' weaknesses.")
+    async def weaknesses(self, ctx, q=1, s="multiplayer"):
+        try:
+            if int(q) > 6:
+                await ctx.send("That's too many weaknesses.")
+                return
+        except:
+           await ctx.send("Invalid number of weaknesses.")
+           return
+        weaknesses = []
+        possible = list(filter(lambda card: card.get('subtype_code', None) == 'basicweakness' and card.get('name', '').lower() != "random basic weakness", self.cards))
+        possible = list(filter(lambda card: 'campaign mode only' not in card.get('text', '').lower(), possible))
+        if s.lower() == 'solo':
+            possible = list(filter(lambda card: 'multiplayer only' not in card.get('text', '').lower(), possible))
+        while len(weaknesses) < int(q):
+            weakness = random.choice(possible)
+            duplicates = list(filter(lambda card: card.get('code', "") == weakness.get('code', ''), weaknesses))
+            if len(duplicates) < int(weakness.get('deck_limit', 0)):
+                weaknesses.append(weakness)
+        for weakness in weaknesses:
+            e = self._embed_card(weakness)
+            await ctx.send(embed=e)
 
     @commands.command(usage="<search string>", help="Finds and embeds all cards matching your query, up to 10 matches. Embeds a card image if the image exists on ArkhamDB.")
     async def card(self, ctx, *, arg):
@@ -188,7 +211,7 @@ class Arkhamdb(commands.Cog):
             await ctx.send(embed=e)
         else:
             await ctx.send('No matches found - invalid faction')
-    
+
     @commands.Cog.listener()
     async def on_message(self, message):
         if "arkhamdb.com/deck/view/" in message.content.lower() or 'arkhamdb.com/decklist/view/' in message.content.lower():
