@@ -33,7 +33,7 @@ class Blob(commands.Cog):
     async def status(self, ctx):
         e = discord.Embed()
         timeremaining = self.endtime - datetime.now()
-        if e.days < 0:
+        if timeremaining.days < 0:
             timeremainingString = '0'
         else:
             timeremainingString = str(math.floor(timeremaining.seconds / 60))
