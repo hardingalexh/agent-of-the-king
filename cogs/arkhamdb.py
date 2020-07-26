@@ -58,7 +58,7 @@ class Arkhamdb(commands.Cog):
                 e.url = 'https://arkhamdb.com/deck/view/' + deckId
             if (deckType == 'decklist'):
                 e.url = 'https://arkhamdb.com/decklist/view/'+ deckId
-            categories = ['Asset', 'Permanent', 'Event', 'Skill', 'Treachery']
+            categories = ['Asset', 'Permanent', 'Event', 'Skill', 'Treachery', 'Enemy']
             deckCards = list(filter(lambda card: card.get('code', '') in deckJson.get('slots', {}).keys(), self.cards))
             for category in categories:
                 if(category == 'Permanent'):
@@ -67,6 +67,8 @@ class Arkhamdb(commands.Cog):
                     categoryCards = list(filter(lambda card: card.get('type_code', '') == category.lower() and card.get('permanent', False) == False, deckCards))
                 if(category == 'Treachery'):
                     e.description += '\n' + 'Treacheries:'
+                elif(category == 'Enemy'):
+                    e.description += '\n' + 'Enemies:'
                 else:
                     e.description += '\n ' + category + 's:'
 
