@@ -6,18 +6,19 @@ class Funko(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self._last_member = None
+        self.shield = u'\U0001F6E1'
+        self.boom = u"\U0001F4A5"
+        self.ex =  "!!!"
+        self.standard = [self.shield, self.shield, self.boom, self.boom, self.boom, self.ex]
+        self.special = {
+            'chaos': ['Blank', 'Blank', 'Blank', self.ex, self.ex, self.ex],
+            'champion': [self.shield, self.shield, self.shield, self.shield, self.ex, self.ex]
+        }
     
-    @commands.command(usage="<quantity> <any number of special dice>", help="Rolls dice for the funkoverse strategy game. Specify a character for character-specific die rolls.")
+    @commands.command(usage="<quantity> <any number of special dice>", help="Rolls dice for the funkoverse strategy game. The first argument is a number and will roll that many standard dice. Any further arguments must be valid special dice.")
     async def funko(self, ctx, *args):
         args = list(args)
-        shield = u'\U0001F6E1'
-        boom = u"\U0001F4A5"
-        ex =  "!!!"
-        faces = [shield, shield, boom, boom, boom, ex]
-        special = {
-            'chaos': ['Blank', 'Blank', 'Blank', ex, ex, ex],
-            'champion': [shield, shield, shield, ex, ex, ex]
-        }
+    
         e = discord.Embed()
         e.title = "Funkoverse Strategy Game Dice Roll"
         e.description = ''
@@ -31,14 +32,14 @@ class Funko(commands.Cog):
             return
 
         for roll in range(quantity):
-                e.description += '\n' + random.choice(faces)
+                e.description += '\n' + random.choice(self.standard)
 
         if len(args) > 1:
             args.pop(0)
             for arg in args:
-                if arg.lower() in special.keys():
+                if arg.lower() in self.special.keys():
                     e.description += '\n \n' + arg + ' Die:'
-                    e.description += '\n' + random.choice(special.get(arg.lower().capitalize()))
+                    e.description += '\n' + random.choice(self.special.get(arg.lower().capitalize()))
                 else:
-                    await ctx.send(arg + 'is not a valid special die.')
+                    await ctx.send(arg + ' is not a valid special die. Valid special dice are: ' + ', '.join(self.special.keys()))
         await ctx.send(embed=e)
