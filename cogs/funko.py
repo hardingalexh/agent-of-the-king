@@ -37,8 +37,8 @@ class Funko(commands.Cog):
             args.pop(0)
             for arg in args:
                 if arg.lower() in special.keys():
-                    e.description += '\n \n ' + arg + ' Die:'
-                    e.description += '\n' + random.choice(special.get(arg.lower()))
+                    e.description += '\n \n' + arg + ' Die:'
+                    e.description += '\n' + random.choice(special.get(arg.lower().capitalize()))
                 else:
                     await ctx.send(arg + 'is not a valid special die.')
         await ctx.send(embed=e)
