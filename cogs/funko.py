@@ -38,8 +38,8 @@ class Funko(commands.Cog):
             args.pop(0)
             for arg in args:
                 if arg.lower() in self.special.keys():
-                    e.description += '\n \n' + arg + ' Die:'
-                    e.description += '\n' + random.choice(self.special.get(arg.lower().capitalize()))
+                    e.description += '\n \n' + arg.lower().capitalize() + ' Die:'
+                    e.description += '\n' + random.choice(self.special.get(arg.lower()))
                 else:
                     await ctx.send(arg + ' is not a valid special die. Valid special dice are: ' + ', '.join(self.special.keys()))
         await ctx.send(embed=e)
