@@ -17,7 +17,7 @@ class Marvelcdb(commands.Cog):
 
     def _get_cards(self):
         return requests.get(
-            'https://www.marvelcdb.com/api/public/cards').json()
+            'https://www.marvelcdb.com/api/public/cards?encounter=1').json()
 
     # creates embedded link with card image
     def _embed_card(self, card, image=True):
