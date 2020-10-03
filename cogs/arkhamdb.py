@@ -152,6 +152,9 @@ class Arkhamdb(commands.Cog):
 
     @commands.command(usage="<search string>", help="Finds and embeds all cards matching your query, up to 10 matches. Embeds a card image if the image exists on ArkhamDB.")
     async def card(self, ctx, *, arg):
+        await self.cardSearch(ctx, arg)
+
+    async def cardSearch(self, ctx, arg):
         if not arg:
             arg = 'ancient evils'
         matches = list(filter(lambda card: arg.lower() in card.get('name', '').lower(), self.cards))
@@ -218,3 +221,7 @@ class Arkhamdb(commands.Cog):
     async def on_message(self, message):
         if "arkhamdb.com/deck/view/" in message.content.lower() or 'arkhamdb.com/decklist/view/' in message.content.lower():
             await self._embed_deck(message)
+        cardsearch = re.findall('(?<=\[\[).+?(?=\]\])', message.content)
+        if len(cardsearch):
+            for card in cardsearch:
+                await self.cardSearch(message.channel, card)
