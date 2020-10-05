@@ -162,10 +162,10 @@ class Arkhamdb(commands.Cog):
             endpos = levelSearch.span()[0] - 1
             searchTerm = arg[0:endpos].strip().lower()
             levelTerm = levelSearch.group()
-            if int(levelTerm):
-                matches = list(filter(lambda card: (searchTerm.lower() in card.get('name', '').lower()) and (card.get('xp', 0) == int(levelTerm)), self.cards))
-            elif levelTerm.lower() == 'u':
+            if levelTerm.lower() == 'u':
                 matches = list(filter(lambda card: (searchTerm.lower() in card.get('name', '').lower()) and (card.get('xp', 0) > 0), self.cards))
+            elif int(levelTerm):
+                matches = list(filter(lambda card: (searchTerm.lower() in card.get('name', '').lower()) and (card.get('xp', 0) == int(levelTerm)), self.cards))
             else:
                 await ctx.send('Invalid input for level')
         else:
