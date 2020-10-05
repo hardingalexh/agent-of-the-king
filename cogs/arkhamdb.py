@@ -150,7 +150,7 @@ class Arkhamdb(commands.Cog):
             e = self._embed_card(weakness)
             await ctx.send(embed=e)
 
-    @commands.command(usage="<search string>", help="Finds and embeds all cards matching your query, up to 10 matches. Embeds a card image if the image exists on ArkhamDB.")
+    @commands.command(usage="<card name> (<optional: level>)", help="Finds and embeds all cards matching your query, up to 10 matches. Embeds a card image if the image exists on ArkhamDB. Optionally include a level in parentheses, ie 'Ward of Protection (2)' or 'Ward of Protection (u)' for all upgraded copies.")
     async def card(self, ctx, *, arg):
         await self.cardSearch(ctx, arg)
 
@@ -164,6 +164,8 @@ class Arkhamdb(commands.Cog):
             levelTerm = levelSearch.group()
             if int(levelTerm):
                 matches = list(filter(lambda card: (searchTerm.lower() in card.get('name', '').lower()) and (card.get('xp', 0) == int(levelTerm)), self.cards))
+            elif levelTerm.lower() == 'u':
+                matches = list(filter(lambda card: (searchTerm.lower() in card.get('name', '').lower()) and (card.get('xp', 0) > 0), self.cards))
             else:
                 await ctx.send('Invalid input for level')
         else:
