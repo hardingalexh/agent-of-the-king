@@ -156,7 +156,7 @@ class Arkhamdb(commands.Cog):
         await self.cardSearch(ctx, arg)
 
     async def cardSearch(self, ctx, arg):
-        print('cardSearch' + arg)
+        print('cardSearch ' + arg)
         if not arg:
             arg = 'ancient evils'
         levelSearch = re.search('(?<=\().+?(?=\))', arg)
@@ -234,6 +234,7 @@ class Arkhamdb(commands.Cog):
         if "arkhamdb.com/deck/view/" in message.content.lower() or 'arkhamdb.com/decklist/view/' in message.content.lower():
             await self._embed_deck(message)
         cardsearch = re.findall('(?<=\().+?(?=\))', message.content)
-        if len(cardsearch):
+        if len(cardsearch):            
             for card in cardsearch:
+                print('onmessage ' + card)
                 await self.cardSearch(message.channel, card)
