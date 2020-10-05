@@ -162,14 +162,14 @@ class Arkhamdb(commands.Cog):
         if levelSearch:
             endpos = levelSearch.span()[0] - 1
             searchTerm = arg[0:endpos].strip()
+            levelTerm = levelSearch.group()
             def query(card):
                 level = False
-                if int(level):
-                    level = card.get('xp', 0) == int(level)
+                if int(levelTerm):
+                    level = card.get('xp', 0) == int(levelTerm)
                 else:
                     level = card.get('xp', 0) > 0
-                match = searchTerm.lower() in card.get('name', '').lower()
-                return (level and match)
+                return (level and searchTerm.lower() in card.get('name', '').lower())
             matches = list(filter(query , self.cards))
         else:
             matches = list(filter(lambda card: arg.lower() in card.get('name', '').lower(), self.cards))
