@@ -157,8 +157,8 @@ class Arkhamdb(commands.Cog):
     async def cardSearch(self, ctx, arg):
         if not arg:
             arg = 'ancient evils'
+        matches = list(filter(lambda card: arg.lower() in card.get('name', '').lower(), self.cards))
         levelSearch = re.search('(?<=\().+?(?=\))', arg)
-        matches = []
         if levelSearch:
             endpos = levelSearch.span()[0] - 1
             searchTerm = arg[0:endpos].strip().lower()
@@ -167,9 +167,6 @@ class Arkhamdb(commands.Cog):
                 matches = list(filter(lambda card: searchTerm in card.get('name', '').lower() and card.get('xp', 0) is int(levelTerm), self.cards))
             else:
                 await ctx.send('Please provide a numerical level')
-                maches = []
-        else:
-            matches = list(filter(lambda card: arg.lower() in card.get('name', '').lower(), self.cards))
         if len(matches) and len(matches) <= 3:
             for match in matches:
                 e = self._embed_card(match)
