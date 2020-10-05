@@ -233,7 +233,7 @@ class Arkhamdb(commands.Cog):
     async def on_message(self, message):
         if "arkhamdb.com/deck/view/" in message.content.lower() or 'arkhamdb.com/decklist/view/' in message.content.lower():
             await self._embed_deck(message)
-        cardsearch = re.findall('(?<=\[).+?(?=\])', message.content)
+        cardsearch = re.findall('(?<=\[\[).+?(?=\]\])', message.content)
         if len(cardsearch):            
             for card in cardsearch:
                 await self.cardSearch(message.channel, card)
