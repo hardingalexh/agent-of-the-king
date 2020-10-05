@@ -157,7 +157,22 @@ class Arkhamdb(commands.Cog):
     async def cardSearch(self, ctx, arg):
         if not arg:
             arg = 'ancient evils'
-        matches = list(filter(lambda card: arg.lower() in card.get('name', '').lower(), self.cards))
+        levelSearch = re.search('(?<=\().+?(?=\))', arg)
+        matches = []
+        if levelSearch:
+            endpos = levelSearch.span()[0] - 1
+            searchTerm = arg[0:endpos].strip()
+            def query(card):
+                level = False
+                if int(level):
+                    level = card.get('xp', 0) == int(level)
+                else:
+                    level = card.get('xp', 0) > 0
+                match = searchTerm.lower() in card.get('name', '').lower()
+                return (level and match)
+            matches = list(filter(query , self.cards))
+        else:
+            matches = list(filter(lambda card: arg.lower() in card.get('name', '').lower(), self.cards))
         if len(matches) and len(matches) <= 3:
             for match in matches:
                 e = self._embed_card(match)
@@ -221,7 +236,7 @@ class Arkhamdb(commands.Cog):
     async def on_message(self, message):
         if "arkhamdb.com/deck/view/" in message.content.lower() or 'arkhamdb.com/decklist/view/' in message.content.lower():
             await self._embed_deck(message)
-        cardsearch = re.findall('(?<=\[\[).+?(?=\]\])', message.content)
+        cardsearch = re.findall('(?<=\().+?(?=\))', message.content)
         if len(cardsearch):
             for card in cardsearch:
                 await self.cardSearch(message.channel, card)
