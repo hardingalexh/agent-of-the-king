@@ -152,9 +152,11 @@ class Arkhamdb(commands.Cog):
 
     @commands.command(usage="<search string>", help="Finds and embeds all cards matching your query, up to 10 matches. Embeds a card image if the image exists on ArkhamDB.")
     async def card(self, ctx, *, arg):
+        print(arg)
         await self.cardSearch(ctx, arg)
 
     async def cardSearch(self, ctx, arg):
+        print(arg)
         if not arg:
             arg = 'ancient evils'
         levelSearch = re.search('(?<=\().+?(?=\))', arg)
