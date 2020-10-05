@@ -16,7 +16,7 @@ Run `docker-compose restart arkham_py` to restart bot to apply changes
 
 ### Arkhamdb-related
 
-If a message includes a link to a deck on arkhamDB, it will be parsed and displayed.
+If a message includes a link to a deck on arkhamDB, it will be parsed and displayed. Additionally, any text included between double brackets will be treated as `!card` input. For example, `!card ward of protection` is the same as including `[[ward of protection]]` in a message.
 
 
 ```
@@ -25,9 +25,9 @@ If a message includes a link to a deck on arkhamDB, it will be parsed and displa
 Re-fetches the card pool from arkhamdb.
 
 ```
-!card [text] [level]
+!card [text] ([level])
 ```
-Searches for a card. Note that cards with multiple words require spaces. For example, searching for "Prepared for the worst" would require `!card "prepared for the worst"`. If 3 or less results are found it will send all of them with pictures, if more than 3 it will just return card titles, if more than 10 it returns a message saying that it can't return that many.
+Searches for a card. Optionally include a level in parentheses. For example, `!card ward of protection` will return all copies, `!card ward of protection (2)` will only return the level 2, and `!card ward of protection(u)` will return all upgraded copies.
 
 ```
 !weakness *traits
