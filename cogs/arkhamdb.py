@@ -34,10 +34,10 @@ class Arkhamdb(commands.Cog):
         deckId = None
         deckType = None
         if "arkhamdb.com/deck/view/" in content:
-            deckId = re.search('(?<=arkhamdb.com/deck/view/)(.{6})', content)
+            deckId = re.search('(?<=arkhamdb\.com\/deck\/view\/).+?(?=\b)', content)
             deckType = 'deck'
         if "https://arkhamdb.com/decklist/" in content:
-            deckId = re.search('(?<=arkhamdb.com/decklist/view/)(.{5})', content)
+            deckId = re.search('(?<=arkhamdb\.com\/decklist\/view\/).+?(?=\b)', content)
             deckType = 'decklist'
 
         if deckId:

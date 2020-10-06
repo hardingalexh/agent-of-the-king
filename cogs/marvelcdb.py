@@ -39,10 +39,10 @@ class Marvelcdb(commands.Cog):
         deckId = None
         deckType = None
         if "marvelcdb.com/deck/view/" in content:
-            deckId = re.search('(?<=marvelcdb.com/deck/view/)(.{5})', content)
+            deckId = re.search('(?<=marvelcdb\.com\/deck\/view\/).+?(?=\b)', content)
             deckType = 'deck'
         if "https://marvelcdb.com/decklist/" in content:
-            deckId = re.search('(?<=marvelcdb.com/decklist/view/)(.{4})', content)
+            deckId = re.search('(?<=marvelcdb\.com\/decklist\/view\/).+?(?=\b)', content)
             deckType = 'decklist'
 
         if deckId:
