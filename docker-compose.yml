@@ -2,6 +2,7 @@ version: '3.5'
 services:
   arkham:
     container_name: arkham_py
+    restart: always
     build: .
     volumes:
       - ./:/code
