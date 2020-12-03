@@ -29,6 +29,10 @@ async def on_message(message):
         await message.channel.send(u"\U0001F3BA" + u"doot doot" + u"\U0001F3BA")
     if 'x' == message.content.lower():
         await message.channel.send('JASON')
+    if 'snowman' in message.content.lower() or 'sexy' in message.content.lower():
+        e = discord.Embed()
+        e.set_image(url="https://i.imgur.com/8wz9cF6.jpeg")
+        await message.channel.send(embed=e)
     
     await bot.process_commands(message)
 
