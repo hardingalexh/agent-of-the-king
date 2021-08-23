@@ -40,9 +40,9 @@ Searches for a random basic weakness. Define any number of parameters. These are
 Picks `<quantity>` random basic weaknesses, ignoring "campaign mode only" weaknesses. If "solo" is passed as the second argument, also ignores all "multiplayer only" weaknesses.
 
 ```
-!upgrade [card]
+!shrewdanalysis [card]
 ```
-Searches for all matches for the card name that are not level 0, and returns a random version of it. For upgrading journey cards like archaic glyphs/strange solution.
+Performs the random search function for [shrewd analysis](https://arkhamdb.com/card/04106). This function respects card quantities and pulls a sample of two cards without replacement from the collection.
 
 ```
 !investigator [faction]

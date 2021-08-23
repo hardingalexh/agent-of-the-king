@@ -99,11 +99,29 @@ class Arkhamdb(commands.Cog):
         await ctx.send('Card pool refreshed')
 
     @commands.command(usage="<card name>", help="Selects a random copy of card level 1 or higher with the given name")
-    async def upgrade(self, ctx, *, arg):
-        targets = list(filter(lambda card: card.get('name', "").lower() == arg.lower() and card.get('xp', 0) is not 0, self.cards))
+    async def shrewdanalysis(self, ctx, *, arg):
+        # get eligible cards
+        targets = list(
+            filter(
+                lambda card: 
+                    card.get('name', "").lower() == arg.lower() 
+                    and card.get('xp', 0) is not 0
+                    and card.get('subname', '').lower() != 'unidentified'
+                    and card.get('subname', '').lower() != 'untranslated', self.cards)
+            )
+        # build a sample of IDs
+        target_ids = []
+        for target in targets:
+            for i in range(target.get('quantity', 1)):
+                target_ids.append(target.get('code') + '_sample' + str(i))
         if len(targets):
-            e = self._embed_card(random.choice(list(targets)))
-            await ctx.send(embed=e)
+            choices = random.sample(list(target_ids), 2)
+            for choice in choices:
+                id = choice.split('_')[0]
+                card = list(filter(lambda target: target.get('code') == id, targets))[0]
+                e = self._embed_card(card)
+                await ctx.send(embed=e)
+
         else:
             await ctx.send("No matches for " + arg)
 
