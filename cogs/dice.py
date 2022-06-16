@@ -42,6 +42,8 @@ class Dice(commands.Cog):
                 e.description += '\n' + str(roll)
 
             await ctx.send(embed=e)
+            if sum(rolls) == 69:
+                await ctx.send("_nice_")
 
     @commands.command(usage="[any number of space separated things]", help="Chooses one from the list provided")
     async def pickone(self, ctx, *args):
