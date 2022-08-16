@@ -9,10 +9,32 @@ class Arkhamdb(commands.Cog):
         self.bot = bot
         self._last_member = None
         self.cards = self._get_cards()
+        self.encounters = self._get_encounter_cards()
+        self.basic_weaknesses = self._get_basic_weaknesses()
+        print('Setup Complete')
 
     def _get_cards(self):
+        print('Retrieving cards from ArkhamDB...')
         return requests.get(
             'https://www.arkhamdb.com/api/public/cards?encounter=1').json()
+
+    def _get_encounter_cards(self):
+        print('Quantifying encounters...')
+        ret = []
+        encounters = list(filter(lambda card: (card.get('type_code', '') == 'treachery' or card.get('type_code', '') == 'enemy') and card.get('subtype_code', '') == '', self.cards))
+        for encounter in encounters:
+            spread = [encounter for i in range(encounter.get('quantity', 1))]
+            ret += spread
+        return ret
+    
+    def _get_basic_weaknesses(self):
+        print('Quantifying basic weaknesses...')
+        weaknesses = list(filter(lambda card: card.get('subtype_code', None) == 'basicweakness' and card.get('name', '').lower() != "random basic weakness", self.cards))
+        ret = []
+        for weakness in weaknesses:
+            spread = [weakness for i in range(weakness.get('quantity', 1))]
+            ret += spread
+        return ret
 
     # creates embedded link with card image
     def _embed_card(self, card, image=True):
@@ -96,6 +118,8 @@ class Arkhamdb(commands.Cog):
     @commands.command(help="Refreshes the card pool from ArkhamDB")
     async def refresh(self, ctx):
         self.cards = self._get_cards()
+        self.encounters = self._get_encounter_cards()
+        self.basic_weaknesses = self._get_basic_weaknesses()
         await ctx.send('Card pool refreshed')
 
     @commands.command(usage="<card name>", help="Selects a random copy of card level 1 or higher with the given name")
@@ -127,8 +151,6 @@ class Arkhamdb(commands.Cog):
 
     @commands.command(usage="[traits, space separated]", help="Chooses a random basic weakness. If any traits are listed, it will find a weakness that matches any of these traits.")
     async def weakness(self, ctx, *args):
-        weaknesses = list(filter(lambda card: card.get('subtype_code', None) ==
-                                'basicweakness' and card.get('name', "").lower() !=  "random basic weakness", self.cards))
         if len(list(args)):
             def matchTraits(card):
                 matches = 0
@@ -138,8 +160,7 @@ class Arkhamdb(commands.Cog):
                 if matches > 0:
                     return True
                 return False
-
-            weaknesses = filter(matchTraits, weaknesses)
+            weaknesses = filter(matchTraits, self.basic_weaknesses)
         weakness = random.choice(list(weaknesses))
         e = self._embed_card(weakness)
         await ctx.send(embed=e)
@@ -154,8 +175,7 @@ class Arkhamdb(commands.Cog):
            await ctx.send("Invalid number of weaknesses.")
            return
         weaknesses = []
-        possible = list(filter(lambda card: card.get('subtype_code', None) == 'basicweakness' and card.get('name', '').lower() != "random basic weakness", self.cards))
-        possible = list(filter(lambda card: 'campaign mode only' not in card.get('text', '').lower(), possible))
+        possible = list(filter(lambda card: 'campaign mode only' not in card.get('text', '').lower(), self.basic_weaknesses))
         if s.lower() == 'solo':
             possible = list(filter(lambda card: 'multiplayer only' not in card.get('text', '').lower(), possible))
         while len(weaknesses) < int(q):
@@ -246,6 +266,35 @@ class Arkhamdb(commands.Cog):
         else:
             await ctx.send('No matches found - invalid faction')
 
+    async def random_encounter(self, ctx, traits=[]):
+        encounters = self.encounters
+        if len(list(traits)):
+            def matchTraits(card):
+                matches = 0
+                for trait in list(traits):
+                    if trait.lower() in card.get('traits', '').lower():
+                        matches += 1
+                if matches > 0:
+                    return True
+                return False
+            encounters = list(filter(matchTraits, encounters))
+        if len(encounters) == 0:
+            await ctx.send('There are no encounter cards matching the specified traits. Take one horror.')
+        else:
+            card = random.choice(encounters)
+            e = self._embed_card(card)
+            try:
+                await ctx.send(embed=e)
+            except:
+                await ctx.channel.send(embed=e)
+            if 'Surge.' in card.get('text', ''):
+                await ctx.send('Surge:')
+                await self.random_encounter(ctx)
+    
+    @commands.command(usage="<optional: traits, space separated>", help="Draws a random encounter card.")
+    async def encounter(self, ctx, *args):
+        await self.random_encounter(ctx, args)
+
     @commands.Cog.listener()
     async def on_message(self, message):
         if "arkhamdb.com/deck/view/" in message.content.lower() or 'arkhamdb.com/decklist/view/' in message.content.lower():
@@ -254,3 +303,5 @@ class Arkhamdb(commands.Cog):
         if len(cardsearch):            
             for card in cardsearch:
                 await self.cardSearch(message.channel, card)
+        if "surge" in message.content.lower() and not message.author.bot:
+            await self.random_encounter(message)
