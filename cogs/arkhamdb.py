@@ -151,6 +151,7 @@ class Arkhamdb(commands.Cog):
 
     @commands.command(usage="[traits, space separated]", help="Chooses a random basic weakness. If any traits are listed, it will find a weakness that matches any of these traits.")
     async def weakness(self, ctx, *args):
+        weaknesses = self.basic_weaknesses
         if len(list(args)):
             def matchTraits(card):
                 matches = 0
