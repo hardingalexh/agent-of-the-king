@@ -153,15 +153,19 @@ class Arkhamdb(commands.Cog):
     async def weakness(self, ctx, *args):
         weaknesses = self.basic_weaknesses
         if len(list(args)):
-            def matchTraits(card):
-                matches = 0
-                for trait in list(args):
-                    if trait.lower() in card.get('traits', '').lower():
-                        matches += 1
-                if matches > 0:
-                    return True
-                return False
-            weaknesses = filter(matchTraits, self.basic_weaknesses)
+            weaknesses = [weakness for weakness in weaknesses if any(trait.lower() in weakness.get('traits', '').lower() for trait in list(args))]
+            if len(weaknesses) == 0:
+                await ctx.send('No weaknesses exist for the given traits')
+            # def matchTraits(card):
+            #     matches = [trait ]
+            #     matches = 0
+            #     for trait in list(args):
+            #         if trait.lower() in card.get('traits', '').lower():
+            #             matches += 1
+            #     if matches > 0:
+            #         return True
+            #     return False
+            # weaknesses = filter(matchTraits, self.basic_weaknesses)
         weakness = random.choice(list(weaknesses))
         e = self._embed_card(weakness)
         await ctx.send(embed=e)
