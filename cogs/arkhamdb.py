@@ -50,6 +50,41 @@ class Arkhamdb(commands.Cog):
             e.description = card.get('subname')
         return e
 
+    def _buildDeckString(self, e, deckJson, slotType='slots'):
+        categories = ['Asset', 'Permanent', 'Event', 'Skill', 'Treachery', 'Enemy']
+        deckCards = list(filter(lambda card: card.get('code', '') in deckJson.get(slotType, {}).keys(), self.cards))
+        for category in categories:
+            if(category == 'Permanent'):
+                categoryCards = list(filter(lambda card: card.get('permanent', False) == True, deckCards))
+            else:
+                categoryCards = list(filter(lambda card: card.get('type_code', '') == category.lower() and card.get('permanent', False) == False, deckCards))
+            if(category == 'Treachery'):
+                e.description += '\n' + 'Treacheries:'
+            elif(category == 'Enemy'):
+                e.description += '\n' + 'Enemies:'
+            else:
+                e.description += '\n ' + category + 's:'
+
+            if category == 'Asset':
+                def slotFilter(e):
+                    return e.get('slot', 'zzzzzz')
+                categoryCards.sort(key=slotFilter)
+                slots = []
+
+            for card in categoryCards:
+
+                cardString = str(deckJson.get(slotType)[card.get('code')]) + 'x '
+                cardString += card.get('name', '')
+                if card.get('xp', 0) > 0:
+                    cardString += ' (' + str(card.get('xp', 0)) + ')'
+
+                if category == 'Asset' and card.get('slot', '') not in slots:
+                    e.description += '\n' + card.get('slot', 'Other') + ':'
+                    slots.append(card.get('slot', ''))
+                e.description += '\n' + cardString
+            e.description += '\n'
+        return e
+
     async def _embed_deck(self, message):
         content = message.content.lower()
         # parse message to get deck id and type (decklist or deck)
@@ -71,47 +106,33 @@ class Arkhamdb(commands.Cog):
             deckJson = requests.get(apiString).json()
             # create initial embed using investigator card image
             gator = list(filter(lambda card: card.get('code', 0) == deckJson.get('investigator_code', None), self.cards))[0]
+            deckTitle = deckJson.get('name', "") + " v" + deckJson.get('version', "")
             e = discord.Embed()
             e.description = ''
             # set title to deck name with appropriate url
-            e.title = deckJson.get('name', "") + " " + deckJson.get('version', "")
+            e.title = deckTitle
             if deckType == 'deck':
                 e.url = 'https://arkhamdb.com/deck/view/' + deckId
             if (deckType == 'decklist'):
                 e.url = 'https://arkhamdb.com/decklist/view/'+ deckId
-            categories = ['Asset', 'Permanent', 'Event', 'Skill', 'Treachery', 'Enemy']
-            deckCards = list(filter(lambda card: card.get('code', '') in deckJson.get('slots', {}).keys(), self.cards))
-            for category in categories:
-                if(category == 'Permanent'):
-                    categoryCards = list(filter(lambda card: card.get('permanent', False) == True, deckCards))
-                else:
-                    categoryCards = list(filter(lambda card: card.get('type_code', '') == category.lower() and card.get('permanent', False) == False, deckCards))
-                if(category == 'Treachery'):
-                    e.description += '\n' + 'Treacheries:'
-                elif(category == 'Enemy'):
-                    e.description += '\n' + 'Enemies:'
-                else:
-                    e.description += '\n ' + category + 's:'
-
-                if category == 'Asset':
-                    def slotFilter(e):
-                        return e.get('slot', 'zzzzzz')
-                    categoryCards.sort(key=slotFilter)
-                    slots = []
-
-                for card in categoryCards:
-
-                    cardString = str(deckJson.get('slots')[card.get('code')]) + 'x '
-                    cardString += card.get('name', '')
-                    if card.get('xp', 0) > 0:
-                        cardString += ' (' + str(card.get('xp', 0)) + ')'
-
-                    if category == 'Asset' and card.get('slot', '') not in slots:
-                        e.description += '\n' + card.get('slot', 'Other') + ':'
-                        slots.append(card.get('slot', ''))
-                    e.description += '\n' + cardString
-                e.description += '\n'
+            e = self._buildDeckString(e, deckJson)
             await message.channel.send(embed=e)
+
+            ## also embed side deck
+            if len(deckJson.get('sideSlots', {}).keys()):
+                e2 = discord.Embed()
+                e2.title = deckTitle + ": Side Deck"
+                e2.description = ''
+                e2 = self._buildDeckString(e2, deckJson, 'sideSlots')
+                await message.channel.send(embed=e2)
+            
+            ## also embed description
+            if deckJson.get("description_md", ""):
+                e3 = discord.Embed()
+                e3.title = deckTitle + ": Description"
+                e3.description = deckJson.get("description_md")
+                await message.channel.send(embed=e3)
+                
         else:
             await message.channel.send('Deck URL detected, unable to extract deck ID')
 
