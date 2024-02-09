@@ -12,6 +12,7 @@ from cogs.bag import Bag
 from cogs.blob import Blob
 from cogs.funko import Funko
 from cogs.marvelcdb import Marvelcdb
+from cogs.dad import Dad
 
 from dotenv import load_dotenv
 
@@ -42,4 +43,5 @@ bot.add_cog(Bag(bot))
 bot.add_cog(Blob(bot))
 bot.add_cog(Funko(bot))
 bot.add_cog(Marvelcdb(bot))
+bot.add_cog(Dad(bot))
 bot.run(token)
